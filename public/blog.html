@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title x-data="blogPage()" x-text="pageTitle">Blog - Nhà Hàng</title>
+	<meta name="description" content="Blog chia sẻ kinh nghiệm ẩm thực, công thức nấu ăn và tin tức nhà hàng">
+	<script src="https://cdn.tailwindcss.com"></script>
+	<script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+	<script>
+		tailwind.config = {
+			theme: {
+				extend: {
+					colors: {
+						primary: {
+							50: '#fff7ed',
+							100: '#ffedd5',
+							200: '#fed7aa',
+							300: '#fdba74',
+							400: '#fb923c',
+							500: '#f97316',
+							600: '#ea580c',
+							700: '#c2410c',
+							800: '#9a3412',
+							900: '#7c2d12'
+						}
+					}
+				}
+			}
+		}
+	</script>
+	<style>
+		[x-cloak] {
+			display: none !important;
+		}
+
+		.line-clamp-2 {
+			display: -webkit-box;
+			-webkit-line-clamp: 2;
+			-webkit-box-orient: vertical;
+			overflow: hidden;
+		}
+
+		.line-clamp-3 {
+			display: -webkit-box;
+			-webkit-line-clamp: 3;
+			-webkit-box-orient: vertical;
+			overflow: hidden;
+		}
+
+		.prose {
+			max-width: 65ch;
+		}
+
+		.prose p {
+			margin-bottom: 1rem;
+			line-height: 1.8;
+		}
+
+		.prose h2 {
+			font-size: 1.5rem;
+			font-weight: bold;
+			margin: 2rem 0 1rem;
+		}
+
+		.prose h3 {
+			font-size: 1.25rem;
+			font-weight: bold;
+			margin: 1.5rem 0 0.75rem;
+		}
+
+		.prose ul,
+		.prose ol {
+			margin: 1rem 0;
+			padding-left: 1.5rem;
+		}
+
+		.prose li {
+			margin-bottom: 0.5rem;
+		}
+
+		.prose img {
+			max-width: 100%;
+			height: auto;
+			border-radius: 0.5rem;
+			margin: 1rem 0;
+		}
+
+		.prose blockquote {
+			border-left: 4px solid #f97316;
+			padding-left: 1rem;
+			margin: 1rem 0;
+			font-style: italic;
+			color: #666;
+		}
+
+		.prose pre {
+			background: #1e1e1e;
+			color: #fff;
+			padding: 1rem;
+			border-radius: 0.5rem;
+			overflow-x: auto;
+			margin: 1rem 0;
+		}
+
+		.prose a {
+			color: #f97316;
+			text-decoration: underline;
+		}
+	</style>
+</head>
+
+<body class="bg-gray-50" x-data="blogPage()" x-init="init()">
+	<!-- Header -->
+	<header class="bg-white/95 backdrop-blur-md shadow-sm fixed w-full z-50 py-4">
+		<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+			<div class="flex justify-between items-center">
+				<a href="/" class="flex items-center gap-3">
+					<img x-show="info.logo_url" :src="info.logo_url" class="h-10 w-auto">
+					<div x-show="!info.logo_url"
+						class="w-10 h-10 bg-gradient-to-br from-orange-400 to-orange-600 rounded-xl flex items-center justify-center">
+						<i class="fas fa-utensils text-white"></i>
+					</div>
+					<span class="text-xl font-bold text-gray-800" x-text="info.name || 'Nhà Hàng'"></span>
+				</a>
+
+				<!-- Desktop Menu -->
+				<div class="hidden md:flex items-center space-x-8">
+					<a href="/" class="text-gray-700 hover:text-orange-600 font-medium py-2 transition">Trang chủ</a>
+					<a x-show="info.show_menu" href="/#menu"
+						class="text-gray-700 hover:text-orange-600 font-medium py-2 transition">Thực
+						đơn</a>
+					<a x-show="info.show_gallery" href="/#gallery"
+						class="text-gray-700 hover:text-orange-600 font-medium py-2 transition">Hình
+						ảnh</a>
+					<a href="/blog" class="text-orange-500 font-medium py-2">Blog</a>
+					<a href="/#contact" class="text-gray-700 hover:text-orange-600 font-medium py-2 transition">Liên
+						hệ</a>
+					<a href="/#booking"
+						class="px-5 py-2 bg-orange-500 text-white rounded-full font-medium hover:bg-orange-600 transition shadow-lg shadow-orange-500/30">
+						<i class="fas fa-calendar-check mr-2"></i>Đặt bàn
+					</a>
+				</div>
+
+				<!-- Mobile Menu Button -->
+				<button @click="mobileMenu = !mobileMenu" class="md:hidden p-2 text-gray-600 hover:text-orange-500">
+					<i class="fas fa-bars text-xl"></i>
+				</button>
+			</div>
+
+			<!-- Mobile Menu -->
+			<div x-show="mobileMenu" x-transition class="md:hidden mt-4 pb-4 border-t border-gray-100 pt-4">
+				<div class="flex flex-col space-y-3">
+					<a href="/" class="text-gray-700 hover:text-orange-600 font-medium py-2">Trang chủ</a>
+					<a x-show="info.show_menu" href="/#menu"
+						class="text-gray-700 hover:text-orange-600 font-medium py-2">Thực đơn</a>
+					<a x-show="info.show_gallery" href="/#gallery"
+						class="text-gray-700 hover:text-orange-600 font-medium py-2">Hình ảnh</a>
+					<a href="/blog" class="text-orange-500 font-medium py-2">Blog</a>
+					<a href="/#contact" class="text-gray-700 hover:text-orange-600 font-medium py-2">Liên hệ</a>
+					<a href="/#booking"
+						class="inline-flex items-center justify-center px-5 py-2 bg-orange-500 text-white rounded-full font-medium hover:bg-orange-600 transition mt-2">
+						<i class="fas fa-calendar-check mr-2"></i>Đặt bàn
+					</a>
+				</div>
+			</div>
+		</div>
+	</header>
+
+	<!-- Spacer for fixed header -->
+	<div class="h-20"></div>
+
+	<!-- Blog List View -->
+	<main x-show="!selectedPost" class="max-w-6xl mx-auto px-4 py-8">
+		<div class="text-center mb-12">
+			<h1 class="text-4xl font-bold text-gray-800 mb-4">Blog Nhà Hàng</h1>
+			<p class="text-gray-500 text-lg">Chia sẻ câu chuyện, công thức và trải nghiệm ẩm thực</p>
+		</div>
+
+		<!-- Blog Grid -->
+		<div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+			<template x-for="post in posts" :key="post.id">
+				<article @click="viewPost(post.slug)"
+					class="bg-white rounded-2xl shadow-sm overflow-hidden hover:shadow-lg transition cursor-pointer group">
+					<div class="relative h-48 bg-gradient-to-r from-orange-400 to-red-500 overflow-hidden">
+						<img x-show="post.image_url" :src="post.image_url"
+							class="w-full h-full object-cover group-hover:scale-105 transition duration-300">
+						<div x-show="!post.image_url" class="flex items-center justify-center h-full">
+							<i class="fas fa-newspaper text-white text-5xl opacity-50"></i>
+						</div>
+					</div>
+					<div class="p-6">
+						<p class="text-sm text-orange-500 mb-2" x-text="formatDate(post.created_at)"></p>
+						<h2 class="text-xl font-bold text-gray-800 mb-3 group-hover:text-orange-500 transition"
+							x-text="post.title"></h2>
+						<p class="text-gray-500 line-clamp-3" x-text="post.excerpt || ''"></p>
+						<div class="mt-4 flex items-center text-orange-500 font-medium">
+							<span>Đọc tiếp</span>
+							<i class="fas fa-arrow-right ml-2 group-hover:translate-x-1 transition"></i>
+						</div>
+					</div>
+				</article>
+			</template>
+		</div>
+
+		<!-- Empty State -->
+		<div x-show="posts.length === 0" class="text-center py-20">
+			<i class="fas fa-newspaper text-6xl text-gray-200 mb-4"></i>
+			<p class="text-gray-500 text-lg">Chưa có bài viết nào</p>
+		</div>
+	</main>
+
+	<!-- Single Post View -->
+	<main x-show="selectedPost" x-cloak class="max-w-4xl mx-auto px-4 py-8">
+		<button @click="selectedPost = null; history.pushState({}, '', '/blog')"
+			class="inline-flex items-center text-orange-500 hover:text-orange-600 mb-8 font-medium">
+			<i class="fas fa-arrow-left mr-2"></i>
+			<span>Quay lại danh sách</span>
+		</button>
+
+		<article class="bg-white rounded-2xl shadow-sm overflow-hidden">
+			<div x-show="selectedPost?.image_url" class="h-64 md:h-96">
+				<img :src="selectedPost?.image_url" class="w-full h-full object-cover">
+			</div>
+			<div class="p-8 md:p-12">
+				<p class="text-sm text-orange-500 mb-4" x-text="formatDate(selectedPost?.created_at)"></p>
+				<h1 class="text-3xl md:text-4xl font-bold text-gray-800 mb-6" x-text="selectedPost?.title"></h1>
+
+				<div class="prose text-gray-600 max-w-none" x-html="selectedPost?.content"></div>
+			</div>
+		</article>
+
+		<!-- Share Buttons -->
+		<div class="mt-8 flex items-center gap-4">
+			<span class="text-gray-500">Chia sẻ:</span>
+			<a :href="'https://www.facebook.com/sharer/sharer.php?u=' + encodeURIComponent(window.location.href)"
+				target="_blank"
+				class="w-10 h-10 bg-blue-600 text-white rounded-full flex items-center justify-center hover:bg-blue-700 transition">
+				<i class="fab fa-facebook-f"></i>
+			</a>
+			<a :href="'https://twitter.com/intent/tweet?url=' + encodeURIComponent(window.location.href)"
+				target="_blank"
+				class="w-10 h-10 bg-sky-500 text-white rounded-full flex items-center justify-center hover:bg-sky-600 transition">
+				<i class="fab fa-twitter"></i>
+			</a>
+			<button @click="copyLink()"
+				class="w-10 h-10 bg-gray-200 text-gray-600 rounded-full flex items-center justify-center hover:bg-gray-300 transition">
+				<i class="fas fa-link"></i>
+			</button>
+		</div>
+	</main>
+
+	<!-- Footer -->
+	<footer class="bg-gray-900 text-white py-8 sm:py-12 mt-12">
+		<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+			<div class="grid grid-cols-2 md:grid-cols-3 gap-6 sm:gap-8 mb-6 sm:mb-8">
+				<div class="col-span-2 md:col-span-1">
+					<div class="flex items-center gap-2 sm:gap-3 mb-3 sm:mb-4">
+						<img x-show="info.logo_url" :src="info.logo_url" class="h-8 sm:h-10 w-auto">
+						<div x-show="!info.logo_url"
+							class="w-8 h-8 sm:w-10 sm:h-10 bg-gradient-to-br from-orange-400 to-orange-600 rounded-lg sm:rounded-xl flex items-center justify-center">
+							<i class="fas fa-utensils text-white text-sm sm:text-base"></i>
+						</div>
+						<h3 class="text-base sm:text-xl font-bold" x-text="info.name || 'Nhà Hàng'"></h3>
+					</div>
+					<p class="text-gray-400 text-xs sm:text-sm"
+						x-text="info.description?.substring(0, 100) + '...' || 'Trải nghiệm ẩm thực tuyệt vời'"></p>
+				</div>
+
+				<div>
+					<h4 class="font-semibold mb-3 sm:mb-4 text-sm sm:text-base">Liên kết nhanh</h4>
+					<ul class="space-y-1 sm:space-y-2 text-gray-400 text-xs sm:text-sm">
+						<li><a href="/" class="hover:text-orange-500 transition">Trang chủ</a></li>
+						<li x-show="info.show_menu"><a href="/#menu" class="hover:text-orange-500 transition">Thực
+								đơn</a></li>
+						<li x-show="info.show_gallery"><a href="/#gallery" class="hover:text-orange-500 transition">Hình
+								ảnh</a></li>
+						<li><a href="/#booking" class="hover:text-orange-500 transition">Đặt bàn</a></li>
+						<li><a href="/blog" class="hover:text-orange-500 transition">Blog</a></li>
+						<li><a href="/#contact" class="hover:text-orange-500 transition">Liên hệ</a></li>
+					</ul>
+				</div>
+
+				<div>
+					<h4 class="font-semibold mb-3 sm:mb-4 text-sm sm:text-base">Kết nối với chúng tôi</h4>
+					<div class="flex gap-2 sm:gap-4">
+						<a :href="info.facebook_url || '#'" target="_blank"
+							class="w-8 h-8 sm:w-10 sm:h-10 bg-gray-800 rounded-lg flex items-center justify-center hover:bg-orange-500 transition">
+							<i class="fab fa-facebook-f text-sm"></i>
+						</a>
+						<a href="#"
+							class="w-8 h-8 sm:w-10 sm:h-10 bg-gray-800 rounded-lg flex items-center justify-center hover:bg-orange-500 transition">
+							<i class="fab fa-instagram text-sm"></i>
+						</a>
+						<a href="#"
+							class="w-8 h-8 sm:w-10 sm:h-10 bg-gray-800 rounded-lg flex items-center justify-center hover:bg-orange-500 transition">
+							<i class="fab fa-tiktok text-sm"></i>
+						</a>
+					</div>
+					<div class="mt-3 sm:mt-4 text-gray-400 text-xs sm:text-sm">
+						<p x-text="info.phone"></p>
+						<p x-text="info.email"></p>
+					</div>
+				</div>
+			</div>
+
+			<div
+				class="border-t border-gray-800 pt-6 sm:pt-8 flex flex-col sm:flex-row justify-between items-center gap-3">
+				<p class="text-gray-400 text-xs sm:text-sm text-center sm:text-left">© <span
+						x-text="new Date().getFullYear()"></span> <span x-text="info.name || 'Nhà Hàng'"></span>. All
+					rights reserved.</p>
+				<a href="/admin" class="text-gray-500 hover:text-orange-500 text-xs sm:text-sm">
+					<i class="fas fa-lock mr-1"></i>Admin
+				</a>
+			</div>
+		</div>
+	</footer>
+
+	<script>
+		function blogPage() {
+			return {
+				info: {},
+				posts: [],
+				selectedPost: null,
+				pageTitle: 'Blog - Nhà Hàng',
+				mobileMenu: false,
+
+				async init() {
+					await this.loadInfo();
+					await this.loadPosts();
+					this.trackPageView();
+
+					// Check for slug in URL
+					const path = window.location.pathname;
+					if (path.startsWith('/blog/')) {
+						const slug = path.replace('/blog/', '');
+						if (slug) {
+							await this.loadPost(slug);
+						}
+					}
+				},
+
+				async loadInfo() {
+					try {
+						const response = await fetch('/api/content/info');
+						this.info = await response.json();
+						this.updatePageTitle();
+					} catch (error) {
+						console.error('Failed to load info:', error);
+					}
+				},
+
+				async loadPosts() {
+					try {
+						const response = await fetch('/api/blog');
+						this.posts = await response.json();
+					} catch (error) {
+						console.error('Failed to load posts:', error);
+						this.posts = [];
+					}
+				},
+
+				async loadPost(slug) {
+					try {
+						const response = await fetch(`/api/blog/post/${slug}`);
+						if (response.ok) {
+							this.selectedPost = await response.json();
+							this.updatePageTitle();
+						}
+					} catch (error) {
+						console.error('Failed to load post:', error);
+					}
+				},
+
+				viewPost(slug) {
+					history.pushState({}, '', `/blog/${slug}`);
+					this.loadPost(slug);
+				},
+
+				updatePageTitle() {
+					if (this.selectedPost) {
+						this.pageTitle = `${this.selectedPost.title} - ${this.info.name || 'Restaurant'}`;
+					} else {
+						this.pageTitle = `Blog - ${this.info.name || 'Restaurant'}`;
+					}
+					document.title = this.pageTitle;
+				},
+
+				formatDate(dateString) {
+					if (!dateString) return '';
+					const date = new Date(dateString);
+					const options = { year: 'numeric', month: 'long', day: 'numeric' };
+					return date.toLocaleDateString('vi-VN', options);
+				},
+
+				copyLink() {
+					navigator.clipboard.writeText(window.location.href);
+					alert('Đã sao chép link!');
+				},
+
+				trackPageView() {
+					fetch('/api/stats/track', {
+						method: 'POST',
+						headers: { 'Content-Type': 'application/json' },
+						body: JSON.stringify({
+							page_url: window.location.pathname,
+							referrer: document.referrer
+						})
+					}).catch(() => { });
+				}
+			}
+		}
+
+		// Handle browser back/forward buttons
+		window.addEventListener('popstate', () => {
+			const path = window.location.pathname;
+			if (path === '/blog') {
+				Alpine.store('selectedPost', null);
+			}
+		});
+	</script>
+</body>
+
+</html>

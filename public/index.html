@@ -1,0 +1,974 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Nhà Hàng</title>
+	<meta name="description" id="meta-description" content="">
+	<meta name="keywords" id="meta-keywords" content="">
+	<!-- Open Graph -->
+	<meta property="og:type" content="website">
+	<meta property="og:title" id="og-title" content="">
+	<meta property="og:description" id="og-description" content="">
+	<meta property="og:image" id="og-image" content="">
+	<meta property="og:url" content="">
+	<link rel="icon" type="image/x-icon" id="dynamic-favicon" href="/favicon.ico">
+	<script src="https://cdn.tailwindcss.com"></script>
+	<script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+	<script>
+		tailwind.config = {
+			theme: {
+				extend: {
+					colors: {
+						primary: {
+							50: '#fef7ee',
+							100: '#fdedd3',
+							200: '#fad7a5',
+							300: '#f6ba6d',
+							400: '#f19333',
+							500: '#ee7711',
+							600: '#df5c08',
+							700: '#b94309',
+							800: '#93360f',
+							900: '#772e0f'
+						}
+					}
+				}
+			}
+		}
+	</script>
+	<style>
+		[x-cloak] {
+			display: none !important;
+		}
+
+		html {
+			scroll-behavior: smooth;
+		}
+
+		.hero-pattern {
+			background: linear-gradient(135deg, rgba(238, 119, 17, 0.9), rgba(223, 92, 8, 0.95));
+		}
+
+		.card-hover:hover {
+			transform: translateY(-5px);
+		}
+
+		.line-clamp-2 {
+			display: -webkit-box;
+			-webkit-line-clamp: 2;
+			-webkit-box-orient: vertical;
+			overflow: hidden;
+		}
+	</style>
+</head>
+
+<body class="bg-gray-50 font-sans" x-data="restaurantApp()" x-init="init()">
+
+	<!-- Navigation -->
+	<nav class="bg-white/95 backdrop-blur-md shadow-sm fixed w-full z-50 transition-all duration-300"
+		:class="scrolled ? 'py-2 shadow-md' : 'py-4'" @scroll.window="scrolled = window.scrollY > 50">
+		<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+			<div class="flex justify-between items-center">
+				<div class="flex items-center gap-3">
+					<template x-if="info.logo_url">
+						<img :src="info.logo_url" alt="Logo" class="h-10 w-auto">
+					</template>
+					<div x-show="!info.logo_url"
+						class="w-10 h-10 bg-gradient-to-br from-primary-400 to-primary-600 rounded-xl flex items-center justify-center">
+						<i class="fas fa-utensils text-white"></i>
+					</div>
+					<h1 class="text-xl font-bold text-gray-800" x-text="info.name || 'Nhà Hàng'"></h1>
+				</div>
+
+				<!-- Desktop Menu -->
+				<div class="hidden md:flex items-center space-x-8">
+					<a href="#home" class="text-gray-700 hover:text-primary-600 font-medium py-2 transition">Trang
+						chủ</a>
+					<a x-show="info.show_menu" href="/menu"
+						class="text-gray-700 hover:text-primary-600 font-medium py-2 transition">Thực
+						đơn</a>
+					<a x-show="info.show_gallery" href="#gallery"
+						class="text-gray-700 hover:text-primary-600 font-medium py-2 transition">Hình
+						ảnh</a>
+					<a href="/blog" class="text-gray-700 hover:text-primary-600 font-medium py-2 transition">Blog</a>
+					<a href="#contact" class="text-gray-700 hover:text-primary-600 font-medium py-2 transition">Liên
+						hệ</a>
+					<a href="#booking"
+						class="px-5 py-2 bg-primary-500 text-white rounded-full font-medium hover:bg-primary-600 transition shadow-lg shadow-primary-500/30">
+						<i class="fas fa-calendar-check mr-2"></i><span>Đặt bàn</span>
+					</a>
+				</div>
+
+				<!-- Mobile Menu Button -->
+				<button @click="mobileMenu = !mobileMenu" class="md:hidden p-2 text-gray-600 hover:text-primary-500">
+					<i class="fas fa-bars text-xl"></i>
+				</button>
+			</div>
+
+			<!-- Mobile Menu -->
+			<div x-show="mobileMenu" x-transition class="md:hidden mt-4 pb-4 border-t border-gray-100 pt-4">
+				<div class="flex flex-col space-y-3">
+					<a href="#home" @click="mobileMenu = false"
+						class="text-gray-700 hover:text-primary-600 font-medium py-2">Trang chủ</a>
+					<a x-show="info.show_menu" href="/menu" @click="mobileMenu = false"
+						class="text-gray-700 hover:text-primary-600 font-medium py-2">Thực đơn</a>
+					<a x-show="info.show_gallery" href="#gallery" @click="mobileMenu = false"
+						class="text-gray-700 hover:text-primary-600 font-medium py-2">Hình ảnh</a>
+					<a href="/blog" @click="mobileMenu = false"
+						class="text-gray-700 hover:text-primary-600 font-medium py-2">Blog</a>
+					<a href="#contact" @click="mobileMenu = false"
+						class="text-gray-700 hover:text-primary-600 font-medium py-2">Liên hệ</a>
+					<a href="#booking" @click="mobileMenu = false" class="text-primary-600 font-medium py-2">Đặt bàn</a>
+				</div>
+			</div>
+		</div>
+	</nav>
+
+	<!-- Hero Section -->
+	<section id="home" class="relative min-h-screen flex items-center">
+		<div class="absolute inset-0">
+			<div x-show="info.banner_url" class="w-full h-full">
+				<img :src="info.banner_url" class="w-full h-full object-cover">
+				<div class="absolute inset-0 bg-gradient-to-r from-black/70 to-black/40"></div>
+			</div>
+			<div x-show="!info.banner_url" class="w-full h-full hero-pattern"></div>
+		</div>
+
+		<div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 sm:py-32">
+			<div class="max-w-2xl">
+				<span
+					class="inline-block px-3 sm:px-4 py-2 bg-white/20 text-white rounded-full text-xs sm:text-sm font-medium backdrop-blur-sm mb-4 sm:mb-6">
+					<i class="fas fa-star text-yellow-400 mr-2"></i>Chào mừng đến với chúng tôi
+				</span>
+				<h2 class="text-3xl sm:text-5xl md:text-6xl font-bold text-white mb-4 sm:mb-6 leading-tight"
+					x-text="info.hero_title || info.name || 'Nhà Hàng Của Bạn'"></h2>
+				<p class="text-base sm:text-xl text-white/90 mb-6 sm:mb-8 leading-relaxed"
+					x-text="info.hero_subtitle || info.description || 'Khám phá hương vị tuyệt vời với những món ăn được chế biến từ nguyên liệu tươi ngon nhất.'">
+				</p>
+				<div class="flex flex-col sm:flex-row flex-wrap gap-3 sm:gap-4">
+					<a x-show="info.show_menu" href="/menu"
+						class="px-6 sm:px-8 py-3 sm:py-4 bg-primary-500 text-white rounded-full font-semibold hover:bg-primary-600 transition shadow-2xl shadow-primary-500/40 inline-flex items-center justify-center">
+						<i class="fas fa-utensils mr-2"></i>Xem thực đơn
+					</a>
+					<a href="#booking"
+						class="px-6 sm:px-8 py-3 sm:py-4 bg-white/20 text-white rounded-full font-semibold hover:bg-white/30 transition backdrop-blur-sm inline-flex items-center justify-center border border-white/30">
+						<i class="fas fa-calendar-check mr-2"></i>Đặt bàn ngay
+					</a>
+				</div>
+			</div>
+		</div>
+
+		<div class="absolute bottom-10 left-1/2 -translate-x-1/2 animate-bounce">
+			<a href="#about"
+				class="w-12 h-12 bg-white/20 rounded-full flex items-center justify-center text-white backdrop-blur-sm">
+				<i class="fas fa-chevron-down"></i>
+			</a>
+		</div>
+	</section>
+
+	<!-- About Section -->
+	<section id="about" class="py-12 sm:py-20 bg-white">
+		<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+			<div class="grid lg:grid-cols-2 gap-8 lg:gap-12 items-center">
+				<div>
+					<span class="text-primary-500 font-semibold text-sm sm:text-base">VỀ CHÚNG TÔI</span>
+					<h2 class="text-2xl sm:text-4xl font-bold text-gray-800 mt-2 mb-4 sm:mb-6">Hương vị đặc trưng, trải
+						nghiệm tuyệt vời
+					</h2>
+					<p class="text-gray-600 text-base sm:text-lg leading-relaxed mb-4 sm:mb-6"
+						x-text="info.description || 'Chúng tôi tự hào mang đến những món ăn ngon nhất, được chế biến từ nguyên liệu tươi ngon với công thức độc đáo.'">
+					</p>
+
+					<div class="grid grid-cols-2 gap-4 sm:gap-6 mb-6 sm:mb-8">
+						<div class="flex items-center gap-2 sm:gap-3">
+							<div
+								class="w-10 h-10 sm:w-12 sm:h-12 bg-primary-100 rounded-xl flex items-center justify-center flex-shrink-0">
+								<i class="fas fa-leaf text-primary-500 text-sm sm:text-base"></i>
+							</div>
+							<div>
+								<h4 class="font-semibold text-gray-800 text-sm sm:text-base">Nguyên liệu tươi</h4>
+								<p class="text-xs sm:text-sm text-gray-500">100% tự nhiên</p>
+							</div>
+						</div>
+						<div class="flex items-center gap-2 sm:gap-3">
+							<div
+								class="w-10 h-10 sm:w-12 sm:h-12 bg-primary-100 rounded-xl flex items-center justify-center flex-shrink-0">
+								<i class="fas fa-award text-primary-500 text-sm sm:text-base"></i>
+							</div>
+							<div>
+								<h4 class="font-semibold text-gray-800 text-sm sm:text-base">Chất lượng cao</h4>
+								<p class="text-xs sm:text-sm text-gray-500">Cam kết hàng đầu</p>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<div class="relative hidden lg:block">
+					<div class="bg-primary-100 rounded-3xl p-8">
+						<div class="grid grid-cols-2 gap-4">
+							<template x-for="(img, index) in gallery.slice(0, 4)" :key="img.id">
+								<div :class="index % 2 === 0 ? 'mt-8' : ''"
+									class="rounded-2xl overflow-hidden shadow-lg">
+									<img :src="img.image_url" class="w-full h-40 object-cover">
+								</div>
+							</template>
+						</div>
+					</div>
+					<div class="absolute -bottom-6 -left-6 bg-primary-500 text-white p-6 rounded-2xl shadow-xl">
+						<p class="text-4xl font-bold" x-text="menu.length + '+'"></p>
+						<p class="text-sm">Món ngon</p>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+
+	<!-- Featured Section -->
+	<section x-show="featuredMenu.length > 0" id="featured"
+		class="py-12 sm:py-20 bg-gradient-to-br from-primary-50 to-orange-50">
+		<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+			<div class="text-center mb-8 sm:mb-12">
+				<span class="text-primary-500 font-semibold text-sm sm:text-base">MÓN NỔI BẬT</span>
+				<h2 class="text-2xl sm:text-4xl font-bold text-gray-800 mt-2 mb-3 sm:mb-4">Được yêu thích nhất</h2>
+				<p class="text-gray-600 max-w-2xl mx-auto text-sm sm:text-base">Những món ăn signature được khách hàng
+					yêu thích</p>
+			</div>
+
+			<div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 lg:gap-8">
+				<template x-for="item in featuredMenu" :key="item.id">
+					<div
+						class="bg-white rounded-xl sm:rounded-2xl shadow-lg overflow-hidden card-hover transition-all duration-300 hover:shadow-2xl relative">
+						<div class="absolute top-3 right-3 sm:top-4 sm:right-4 z-10">
+							<span
+								class="px-2 py-1 sm:px-3 bg-yellow-400 text-yellow-900 text-xs font-bold rounded-full shadow-lg">
+								<i class="fas fa-star mr-1"></i>Nổi bật
+							</span>
+						</div>
+						<div class="relative h-40 sm:h-56 overflow-hidden">
+							<img :src="item.image_url || 'https://via.placeholder.com/400x300?text=Delicious'"
+								:alt="item.name"
+								class="w-full h-full object-cover hover:scale-110 transition-transform duration-500">
+						</div>
+						<div class="p-4 sm:p-6">
+							<div class="flex justify-between items-start mb-2 sm:mb-3 gap-2">
+								<h3 class="text-base sm:text-xl font-bold text-gray-800" x-text="item.name"></h3>
+								<span class="text-primary-500 font-bold text-sm sm:text-lg whitespace-nowrap"
+									x-text="formatPrice(item.price)"></span>
+							</div>
+							<p class="text-gray-500 text-xs sm:text-sm line-clamp-2"
+								x-text="item.description || 'Món ăn đặc biệt của nhà hàng'"></p>
+						</div>
+					</div>
+				</template>
+			</div>
+		</div>
+	</section>
+
+	<!-- Promotions Section -->
+	<section x-show="info.show_promotions && promotions.length > 0" id="promotions" class="py-12 sm:py-20 bg-white">
+		<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+			<div class="text-center mb-8 sm:mb-12">
+				<span class="text-primary-500 font-semibold text-sm sm:text-base">ƯU ĐÃI</span>
+				<h2 class="text-2xl sm:text-4xl font-bold text-gray-800 mt-2 mb-3 sm:mb-4">Khuyến mãi hấp dẫn</h2>
+				<p class="text-gray-600 max-w-2xl mx-auto text-sm sm:text-base">Đừng bỏ lỡ những ưu đãi đặc biệt dành
+					cho bạn</p>
+			</div>
+
+			<div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 lg:gap-8">
+				<template x-for="promo in promotions" :key="promo.id">
+					<div
+						class="bg-gradient-to-br from-red-500 to-orange-500 rounded-xl sm:rounded-2xl shadow-xl overflow-hidden card-hover transition-all duration-300 hover:shadow-2xl hover:scale-105">
+						<div class="relative h-36 sm:h-48">
+							<img x-show="promo.image_url" :src="promo.image_url"
+								class="w-full h-full object-cover opacity-90">
+							<div x-show="!promo.image_url" class="w-full h-full flex items-center justify-center">
+								<i class="fas fa-gift text-white text-4xl sm:text-5xl opacity-30"></i>
+							</div>
+							<div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
+							<div x-show="promo.discount_text" class="absolute top-3 right-3 sm:top-4 sm:right-4">
+								<span
+									class="px-3 py-1 sm:px-4 sm:py-2 bg-yellow-400 text-yellow-900 text-sm sm:text-base font-bold rounded-full shadow-lg animate-pulse"
+									x-text="promo.discount_text"></span>
+							</div>
+						</div>
+						<div class="p-4 sm:p-6 text-white">
+							<h3 class="text-base sm:text-xl font-bold mb-1 sm:mb-2" x-text="promo.title"></h3>
+							<p class="text-white/80 text-xs sm:text-sm" x-text="promo.description || ''"></p>
+						</div>
+					</div>
+				</template>
+			</div>
+		</div>
+	</section>
+
+	<!-- Menu Section -->
+	<section x-show="info.show_menu" id="menu" class="py-12 sm:py-20 bg-gray-50">
+		<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+			<div class="text-center mb-8 sm:mb-12">
+				<span class="text-primary-500 font-semibold text-sm sm:text-base">THỰC ĐƠN</span>
+				<h2 class="text-2xl sm:text-4xl font-bold text-gray-800 mt-2 mb-3 sm:mb-4">Khám phá món ngon</h2>
+				<p class="text-gray-600 max-w-2xl mx-auto text-sm sm:text-base">Đa dạng các món ăn được chế biến tinh
+					tế, phục vụ mọi khẩu vị
+				</p>
+			</div>
+
+			<!-- Category Filter -->
+			<div class="flex flex-wrap justify-center gap-2 sm:gap-3 mb-6 sm:mb-10">
+				<button @click="selectedCategory = 'all'"
+					:class="selectedCategory === 'all' ? 'bg-primary-500 text-white shadow-lg shadow-primary-500/30' : 'bg-white text-gray-700 hover:bg-gray-50'"
+					class="px-4 py-2 sm:px-6 sm:py-3 rounded-full font-medium transition-all duration-200 text-sm sm:text-base">
+					Tất cả
+				</button>
+				<template x-for="category in categories" :key="category">
+					<button @click="selectedCategory = category"
+						:class="selectedCategory === category ? 'bg-primary-500 text-white shadow-lg shadow-primary-500/30' : 'bg-white text-gray-700 hover:bg-gray-50'"
+						class="px-4 py-2 sm:px-6 sm:py-3 rounded-full font-medium transition-all duration-200 text-sm sm:text-base"
+						x-text="category">
+					</button>
+				</template>
+			</div>
+
+			<!-- Menu Grid -->
+			<div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 lg:gap-8">
+				<template x-for="item in filteredMenu" :key="item.id">
+					<div
+						class="bg-white rounded-xl sm:rounded-2xl shadow-sm overflow-hidden card-hover transition-all duration-300 hover:shadow-xl">
+						<div class="relative h-40 sm:h-56 overflow-hidden">
+							<img :src="item.image_url || 'https://via.placeholder.com/400x300?text=Delicious'"
+								:alt="item.name"
+								class="w-full h-full object-cover hover:scale-110 transition-transform duration-500">
+							<div class="absolute top-3 left-3 sm:top-4 sm:left-4">
+								<span
+									class="px-2 py-1 sm:px-3 bg-white/90 text-primary-600 text-xs sm:text-sm font-semibold rounded-full backdrop-blur-sm"
+									x-text="item.category"></span>
+							</div>
+						</div>
+						<div class="p-4 sm:p-6">
+							<div class="flex justify-between items-start mb-2 sm:mb-3 gap-2">
+								<h3 class="text-base sm:text-xl font-bold text-gray-800" x-text="item.name"></h3>
+								<span class="text-primary-500 font-bold text-sm sm:text-lg whitespace-nowrap"
+									x-text="formatPrice(item.price)"></span>
+							</div>
+							<p class="text-gray-500 text-xs sm:text-sm line-clamp-2"
+								x-text="item.description || 'Món ăn thơm ngon, hấp dẫn'"></p>
+						</div>
+					</div>
+				</template>
+			</div>
+
+			<div x-show="filteredMenu.length === 0" class="text-center py-16">
+				<i class="fas fa-utensils text-6xl text-gray-200 mb-4"></i>
+				<p class="text-gray-500 text-lg">Chưa có món ăn trong danh mục này</p>
+			</div>
+		</div>
+	</section>
+
+	<!-- Gallery Section -->
+	<section x-show="info.show_gallery" id="gallery" class="py-12 sm:py-20 bg-white">
+		<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+			<div class="text-center mb-8 sm:mb-12">
+				<span class="text-primary-500 font-semibold text-sm sm:text-base">THƯ VIỆN</span>
+				<h2 class="text-2xl sm:text-4xl font-bold text-gray-800 mt-2 mb-3 sm:mb-4">Khoảnh khắc đẹp</h2>
+				<p class="text-gray-600 max-w-2xl mx-auto text-sm sm:text-base">Những hình ảnh đẹp nhất về nhà hàng và
+					các món ăn</p>
+			</div>
+
+			<div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2 sm:gap-4">
+				<template x-for="(image, index) in gallery" :key="image.id">
+					<div :class="index === 0 ? 'col-span-2 row-span-2' : ''"
+						class="relative overflow-hidden rounded-xl sm:rounded-2xl group cursor-pointer">
+						<img :src="image.image_url" :alt="image.caption"
+							:class="index === 0 ? 'h-[200px] sm:h-[400px]' : 'h-24 sm:h-48'"
+							class="w-full object-cover group-hover:scale-110 transition-transform duration-500">
+						<div
+							class="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end p-2 sm:p-4">
+							<p class="text-white text-xs sm:text-sm" x-text="image.caption || ''"></p>
+						</div>
+					</div>
+				</template>
+			</div>
+
+			<div x-show="gallery.length === 0" class="text-center py-16">
+				<i class="fas fa-images text-6xl text-gray-200 mb-4"></i>
+				<p class="text-gray-500 text-lg">Chưa có hình ảnh nào</p>
+			</div>
+		</div>
+	</section>
+
+	<!-- Reviews Section -->
+	<section x-show="info.show_reviews && reviews.length > 0" id="reviews" class="py-12 sm:py-20 bg-gray-50">
+		<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+			<div class="text-center mb-8 sm:mb-12">
+				<span class="text-primary-500 font-semibold text-sm sm:text-base">ĐÁNH GIÁ</span>
+				<h2 class="text-2xl sm:text-4xl font-bold text-gray-800 mt-2 mb-3 sm:mb-4">Khách hàng nói gì về chúng
+					tôi</h2>
+				<p class="text-gray-600 max-w-2xl mx-auto text-sm sm:text-base">Những trải nghiệm thực tế từ khách hàng
+				</p>
+			</div>
+
+			<div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 lg:gap-8">
+				<template x-for="review in reviews" :key="review.id">
+					<div
+						class="bg-white rounded-xl sm:rounded-2xl p-4 sm:p-6 hover:shadow-lg transition-all duration-300">
+						<div class="flex items-center gap-1 text-yellow-400 mb-3 sm:mb-4 text-sm sm:text-base">
+							<template x-for="i in 5" :key="i">
+								<i :class="i <= review.rating ? 'fas fa-star' : 'far fa-star'"></i>
+							</template>
+						</div>
+						<p class="text-gray-600 mb-4 sm:mb-6 italic text-sm sm:text-base">" <span
+								x-text="review.comment"></span> "</p>
+						<div class="flex items-center gap-3 sm:gap-4">
+							<img :src="review.avatar_url || 'https://ui-avatars.com/api/?name=' + encodeURIComponent(review.customer_name) + '&background=f97316&color=fff'"
+								class="w-10 h-10 sm:w-12 sm:h-12 rounded-full object-cover">
+							<div>
+								<h4 class="font-bold text-gray-800 text-sm sm:text-base" x-text="review.customer_name">
+								</h4>
+								<p class="text-xs sm:text-sm text-gray-400">Khách hàng</p>
+							</div>
+						</div>
+					</div>
+				</template>
+			</div>
+		</div>
+	</section>
+
+	<!-- Booking Section -->
+	<section id="booking" class="py-12 sm:py-20 bg-gradient-to-br from-primary-500 to-primary-700">
+		<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+			<div class="grid lg:grid-cols-2 gap-8 lg:gap-12 items-center">
+				<div class="text-white">
+					<span
+						class="inline-block px-3 sm:px-4 py-2 bg-white/20 rounded-full text-xs sm:text-sm font-medium backdrop-blur-sm mb-3 sm:mb-4">
+						<i class="fas fa-calendar-check mr-2"></i>ĐẶT BÀN TRƯỚC
+					</span>
+					<h2 class="text-2xl sm:text-4xl font-bold mb-4 sm:mb-6">Đặt bàn ngay hôm nay</h2>
+					<p class="text-white/90 text-base sm:text-lg mb-6 sm:mb-8">Hãy đặt bàn trước để đảm bảo có chỗ ngồi
+						tốt nhất. Chúng tôi
+						sẽ liên hệ xác nhận trong thời gian sớm nhất.</p>
+
+					<div class="space-y-3 sm:space-y-4 hidden lg:block">
+						<div class="flex items-center gap-3 sm:gap-4">
+							<div
+								class="w-10 h-10 sm:w-12 sm:h-12 bg-white/20 rounded-xl flex items-center justify-center flex-shrink-0">
+								<i class="fas fa-clock text-sm sm:text-base"></i>
+							</div>
+							<div>
+								<h4 class="font-semibold text-sm sm:text-base">Giờ mở cửa</h4>
+								<p class="text-white/80 text-sm sm:text-base"
+									x-text="info.opening_hours || '10:00 - 22:00'"></p>
+							</div>
+						</div>
+						<div class="flex items-center gap-3 sm:gap-4">
+							<div
+								class="w-10 h-10 sm:w-12 sm:h-12 bg-white/20 rounded-xl flex items-center justify-center flex-shrink-0">
+								<i class="fas fa-phone text-sm sm:text-base"></i>
+							</div>
+							<div>
+								<h4 class="font-semibold text-sm sm:text-base">Hotline</h4>
+								<p class="text-white/80 text-sm sm:text-base" x-text="info.phone || 'Đang cập nhật'">
+								</p>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<div class="bg-white p-5 sm:p-8 rounded-2xl sm:rounded-3xl shadow-2xl">
+					<h3 class="text-xl sm:text-2xl font-bold text-gray-800 mb-4 sm:mb-6">Thông tin đặt bàn</h3>
+					<form @submit.prevent="submitBooking" class="space-y-4 sm:space-y-5">
+						<div>
+							<label class="block text-gray-700 font-medium mb-1 sm:mb-2 text-sm sm:text-base">Họ tên
+								<span class="text-red-500">*</span></label>
+							<input type="text" x-model="bookingForm.customer_name" placeholder="Nhập họ tên" required
+								class="w-full px-4 py-3 sm:px-5 sm:py-4 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition text-sm sm:text-base">
+						</div>
+						<div class="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
+							<div>
+								<label class="block text-gray-700 font-medium mb-1 sm:mb-2 text-sm sm:text-base">Số điện
+									thoại <span class="text-red-500">*</span></label>
+								<input type="tel" x-model="bookingForm.phone" placeholder="0123 456 789" required
+									class="w-full px-4 py-3 sm:px-5 sm:py-4 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition text-sm sm:text-base">
+							</div>
+							<div>
+								<label
+									class="block text-gray-700 font-medium mb-1 sm:mb-2 text-sm sm:text-base">Email</label>
+								<input type="email" x-model="bookingForm.email" placeholder="email@example.com"
+									class="w-full px-4 py-3 sm:px-5 sm:py-4 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition text-sm sm:text-base">
+							</div>
+						</div>
+						<div class="grid grid-cols-3 gap-2 sm:gap-4">
+							<div>
+								<label class="block text-gray-700 font-medium mb-1 sm:mb-2 text-sm sm:text-base">Ngày
+									<span class="text-red-500">*</span></label>
+								<input type="date" x-model="bookingForm.date" required
+									class="w-full px-2 py-3 sm:px-5 sm:py-4 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition text-sm sm:text-base">
+							</div>
+							<div>
+								<label class="block text-gray-700 font-medium mb-1 sm:mb-2 text-sm sm:text-base">Giờ
+									<span class="text-red-500">*</span></label>
+								<input type="time" x-model="bookingForm.time" required
+									class="w-full px-2 py-3 sm:px-5 sm:py-4 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition text-sm sm:text-base">
+							</div>
+							<div>
+								<label class="block text-gray-700 font-medium mb-1 sm:mb-2 text-sm sm:text-base">Số
+									khách <span class="text-red-500">*</span></label>
+								<select x-model="bookingForm.guests" required
+									class="w-full px-2 py-3 sm:px-5 sm:py-4 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition bg-white text-sm sm:text-base">
+									<option value="1">1 người</option>
+									<option value="2">2 người</option>
+									<option value="3">3 người</option>
+									<option value="4">4 người</option>
+									<option value="5">5 người</option>
+									<option value="6">6 người</option>
+									<option value="7">7 người</option>
+									<option value="8">8 người</option>
+									<option value="10">10+ người</option>
+								</select>
+							</div>
+						</div>
+						<div>
+							<label class="block text-gray-700 font-medium mb-1 sm:mb-2 text-sm sm:text-base">Ghi
+								chú</label>
+							<textarea x-model="bookingForm.note" placeholder="Yêu cầu đặc biệt (nếu có)..." rows="2"
+								class="w-full px-4 py-3 sm:px-5 sm:py-4 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition resize-none text-sm sm:text-base"></textarea>
+						</div>
+						<button type="submit" :disabled="bookingLoading"
+							class="w-full py-3 sm:py-4 bg-primary-500 text-white rounded-xl font-semibold hover:bg-primary-600 transition shadow-lg shadow-primary-500/30 disabled:opacity-50 text-sm sm:text-base">
+							<span x-show="!bookingLoading"><i class="fas fa-calendar-check mr-2"></i>Xác nhận đặt
+								bàn</span>
+							<span x-show="bookingLoading"><i class="fas fa-spinner fa-spin mr-2"></i>Đang xử
+								lý...</span>
+						</button>
+					</form>
+
+					<!-- Success Message -->
+					<div x-show="bookingSuccess" x-transition
+						class="mt-4 p-4 bg-green-50 text-green-700 rounded-xl flex items-center gap-3">
+						<i class="fas fa-check-circle text-xl"></i>
+						<span>Đặt bàn thành công! Chúng tôi sẽ liên hệ xác nhận sớm nhất.</span>
+					</div>
+
+					<!-- Error Message -->
+					<div x-show="bookingError" x-transition
+						class="mt-4 p-4 bg-red-50 text-red-700 rounded-xl flex items-center gap-3">
+						<i class="fas fa-exclamation-circle text-xl"></i>
+						<span x-text="bookingError"></span>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+
+	<!-- Contact Section -->
+	<section id="contact" class="py-12 sm:py-20 bg-white">
+		<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+			<div class="text-center mb-8 sm:mb-12">
+				<span class="text-primary-500 font-semibold text-sm sm:text-base">LIÊN HỆ</span>
+				<h2 class="text-2xl sm:text-4xl font-bold text-gray-800 mt-2 mb-3 sm:mb-4">Thông tin liên hệ</h2>
+				<p class="text-gray-600 max-w-2xl mx-auto text-sm sm:text-base">Chúng tôi luôn sẵn sàng hỗ trợ bạn</p>
+			</div>
+
+			<div class="grid lg:grid-cols-2 gap-6 lg:gap-12">
+				<!-- Contact Info -->
+				<div class="space-y-4 sm:space-y-6">
+					<div
+						class="bg-gray-50 p-4 sm:p-6 rounded-xl sm:rounded-2xl flex items-center gap-3 sm:gap-4 hover:shadow-md transition">
+						<div
+							class="w-12 h-12 sm:w-14 sm:h-14 bg-primary-100 rounded-xl sm:rounded-2xl flex items-center justify-center flex-shrink-0">
+							<i class="fas fa-map-marker-alt text-primary-500 text-lg sm:text-xl"></i>
+						</div>
+						<div>
+							<h4 class="font-semibold text-gray-800 text-sm sm:text-base">Địa chỉ</h4>
+							<p class="text-gray-600 text-sm sm:text-base" x-text="info.address || 'Đang cập nhật...'">
+							</p>
+						</div>
+					</div>
+
+					<div
+						class="bg-gray-50 p-4 sm:p-6 rounded-xl sm:rounded-2xl flex items-center gap-3 sm:gap-4 hover:shadow-md transition">
+						<div
+							class="w-12 h-12 sm:w-14 sm:h-14 bg-primary-100 rounded-xl sm:rounded-2xl flex items-center justify-center flex-shrink-0">
+							<i class="fas fa-phone text-primary-500 text-lg sm:text-xl"></i>
+						</div>
+						<div>
+							<h4 class="font-semibold text-gray-800 text-sm sm:text-base">Điện thoại</h4>
+							<a :href="'tel:' + info.phone" class="text-primary-600 hover:underline text-sm sm:text-base"
+								x-text="info.phone || 'Đang cập nhật...'"></a>
+						</div>
+					</div>
+
+					<div
+						class="bg-gray-50 p-4 sm:p-6 rounded-xl sm:rounded-2xl flex items-center gap-3 sm:gap-4 hover:shadow-md transition">
+						<div
+							class="w-12 h-12 sm:w-14 sm:h-14 bg-primary-100 rounded-xl sm:rounded-2xl flex items-center justify-center flex-shrink-0">
+							<i class="fas fa-envelope text-primary-500 text-lg sm:text-xl"></i>
+						</div>
+						<div>
+							<h4 class="font-semibold text-gray-800 text-sm sm:text-base">Email</h4>
+							<a :href="'mailto:' + info.email"
+								class="text-primary-600 hover:underline text-sm sm:text-base"
+								x-text="info.email || 'Đang cập nhật...'"></a>
+						</div>
+					</div>
+
+					<div
+						class="bg-gray-50 p-4 sm:p-6 rounded-xl sm:rounded-2xl flex items-center gap-3 sm:gap-4 hover:shadow-md transition">
+						<div
+							class="w-12 h-12 sm:w-14 sm:h-14 bg-primary-100 rounded-xl sm:rounded-2xl flex items-center justify-center flex-shrink-0">
+							<i class="fas fa-clock text-primary-500 text-lg sm:text-xl"></i>
+						</div>
+						<div>
+							<h4 class="font-semibold text-gray-800 text-sm sm:text-base">Giờ mở cửa</h4>
+							<p class="text-gray-600 text-sm sm:text-base"
+								x-text="info.opening_hours || 'Đang cập nhật...'"></p>
+						</div>
+					</div>
+
+					<!-- Social Links -->
+					<div x-show="info.facebook_url"
+						class="bg-gray-50 p-4 sm:p-6 rounded-xl sm:rounded-2xl flex items-center gap-3 sm:gap-4 hover:shadow-md transition">
+						<div
+							class="w-12 h-12 sm:w-14 sm:h-14 bg-blue-100 rounded-xl sm:rounded-2xl flex items-center justify-center flex-shrink-0">
+							<i class="fab fa-facebook text-blue-600 text-lg sm:text-xl"></i>
+						</div>
+						<div>
+							<h4 class="font-semibold text-gray-800 text-sm sm:text-base">Facebook</h4>
+							<a :href="info.facebook_url" target="_blank"
+								class="text-blue-600 hover:underline text-sm sm:text-base">Theo dõi
+								chúng tôi</a>
+						</div>
+					</div>
+				</div>
+
+				<!-- Google Map -->
+				<div class="bg-gray-50 p-2 sm:p-4 rounded-xl sm:rounded-2xl">
+					<div x-show="info.google_map_url"
+						class="w-full h-[250px] sm:h-[400px] rounded-lg sm:rounded-xl overflow-hidden">
+						<iframe :src="info.google_map_url" width="100%" height="100%" style="border:0;"
+							allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+					</div>
+					<div x-show="!info.google_map_url"
+						class="w-full h-[250px] sm:h-[400px] rounded-lg sm:rounded-xl bg-gray-100 flex items-center justify-center">
+						<div class="text-center text-gray-400">
+							<i class="fas fa-map-marked-alt text-4xl sm:text-5xl mb-3 sm:mb-4"></i>
+							<p class="text-sm sm:text-base">Bản đồ đang được cập nhật</p>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+
+	<!-- Footer -->
+	<footer class="bg-gray-900 text-white py-8 sm:py-12">
+		<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+			<div class="grid grid-cols-2 md:grid-cols-3 gap-6 sm:gap-8 mb-6 sm:mb-8">
+				<div class="col-span-2 md:col-span-1">
+					<div class="flex items-center gap-2 sm:gap-3 mb-3 sm:mb-4">
+						<div
+							class="w-8 h-8 sm:w-10 sm:h-10 bg-gradient-to-br from-primary-400 to-primary-600 rounded-lg sm:rounded-xl flex items-center justify-center">
+							<i class="fas fa-utensils text-white text-sm sm:text-base"></i>
+						</div>
+						<h3 class="text-base sm:text-xl font-bold" x-text="info.name || 'Nhà Hàng'"></h3>
+					</div>
+					<p class="text-gray-400 text-xs sm:text-sm"
+						x-text="info.description?.substring(0, 100) + '...' || 'Trải nghiệm ẩm thực tuyệt vời'"></p>
+				</div>
+
+				<div>
+					<h4 class="font-semibold mb-3 sm:mb-4 text-sm sm:text-base">Liên kết nhanh</h4>
+					<ul class="space-y-1 sm:space-y-2 text-gray-400 text-xs sm:text-sm">
+						<li><a href="#home" class="hover:text-primary-500 transition">Trang chủ</a></li>
+						<li x-show="info.show_menu"><a href="#menu" class="hover:text-primary-500 transition">Thực
+								đơn</a></li>
+						<li x-show="info.show_gallery"><a href="#gallery" class="hover:text-primary-500 transition">Hình
+								ảnh</a></li>
+						<li><a href="#booking" class="hover:text-primary-500 transition">Đặt bàn</a></li>
+						<li><a href="#contact" class="hover:text-primary-500 transition">Liên hệ</a></li>
+					</ul>
+				</div>
+
+				<div>
+					<h4 class="font-semibold mb-3 sm:mb-4 text-sm sm:text-base">Kết nối với chúng tôi</h4>
+					<div class="flex gap-2 sm:gap-4">
+						<a :href="info.facebook_url || '#'" target="_blank"
+							class="w-8 h-8 sm:w-10 sm:h-10 bg-gray-800 rounded-lg flex items-center justify-center hover:bg-primary-500 transition">
+							<i class="fab fa-facebook-f text-sm"></i>
+						</a>
+						<a href="#"
+							class="w-8 h-8 sm:w-10 sm:h-10 bg-gray-800 rounded-lg flex items-center justify-center hover:bg-primary-500 transition">
+							<i class="fab fa-instagram text-sm"></i>
+						</a>
+						<a href="#"
+							class="w-8 h-8 sm:w-10 sm:h-10 bg-gray-800 rounded-lg flex items-center justify-center hover:bg-primary-500 transition">
+							<i class="fab fa-tiktok text-sm"></i>
+						</a>
+					</div>
+					<div class="mt-3 sm:mt-4 text-gray-400 text-xs sm:text-sm">
+						<p x-text="info.phone"></p>
+						<p x-text="info.email"></p>
+					</div>
+				</div>
+			</div>
+
+			<div
+				class="border-t border-gray-800 pt-6 sm:pt-8 flex flex-col sm:flex-row justify-between items-center gap-3">
+				<p class="text-gray-400 text-xs sm:text-sm text-center sm:text-left">© 2026 <span
+						x-text="info.name || 'Nhà Hàng'"></span>. All rights
+					reserved.</p>
+				<a href="/admin" class="text-gray-500 hover:text-primary-500 text-xs sm:text-sm">
+					<i class="fas fa-lock mr-1"></i>Admin
+				</a>
+			</div>
+		</div>
+	</footer>
+
+	<!-- Floating Contact Button -->
+	<div x-show="info.phone" x-transition
+		class="fixed bottom-4 right-4 sm:bottom-6 sm:right-6 z-50 flex flex-col gap-2 sm:gap-3">
+		<!-- Zalo Button - show only if zalo_phone exists -->
+		<a x-show="info.zalo_phone" :href="'https://zalo.me/' + info.zalo_phone" target="_blank"
+			class="w-12 h-12 sm:w-14 sm:h-14 bg-blue-500 text-white rounded-full flex items-center justify-center shadow-lg hover:bg-blue-600 hover:scale-110 transition-all duration-300"
+			title="Chat Zalo">
+			<svg class="w-6 h-6 sm:w-7 sm:h-7" viewBox="0 0 48 48" fill="currentColor">
+				<path
+					d="M24 4C12.954 4 4 12.954 4 24s8.954 20 20 20 20-8.954 20-20S35.046 4 24 4zm0 36c-8.837 0-16-7.163-16-16S15.163 8 24 8s16 7.163 16 16-7.163 16-16 16z" />
+				<path
+					d="M33.5 20.5h-5v-3c0-.828.672-1.5 1.5-1.5h2c.828 0 1.5.672 1.5 1.5v3zm-7 0h-5v-3c0-.828.672-1.5 1.5-1.5h2c.828 0 1.5.672 1.5 1.5v3zm-7 0h-5v-3c0-.828.672-1.5 1.5-1.5h2c.828 0 1.5.672 1.5 1.5v3zm14 3h-19v8c0 1.657 1.343 3 3 3h13c1.657 0 3-1.343 3-3v-8z" />
+			</svg>
+		</a>
+		<!-- Phone Call Button - always show if phone exists -->
+		<a :href="'tel:' + info.phone"
+			class="w-12 h-12 sm:w-14 sm:h-14 bg-green-500 text-white rounded-full flex items-center justify-center shadow-lg hover:bg-green-600 hover:scale-110 transition-all duration-300"
+			title="Gọi ngay">
+			<i class="fas fa-phone text-lg sm:text-xl"></i>
+		</a>
+	</div>
+
+	<!-- Phone number tooltip on hover (desktop only) -->
+	<style>
+		@media (min-width: 640px) {
+			.phone-tooltip:hover::before {
+				content: attr(data-phone);
+				position: absolute;
+				right: 100%;
+				margin-right: 10px;
+				background: #1f2937;
+				color: white;
+				padding: 8px 12px;
+				border-radius: 8px;
+				white-space: nowrap;
+				font-size: 14px;
+				font-weight: 600;
+			}
+		}
+	</style>
+
+	<script>
+		function restaurantApp() {
+			return {
+				info: {
+					show_promotions: true,
+					show_menu: true,
+					show_gallery: true,
+					show_reviews: true
+				},
+				menu: [],
+				featuredMenu: [],
+				gallery: [],
+				reviews: [],
+				promotions: [],
+				selectedCategory: 'all',
+				categories: [],
+				mobileMenu: false,
+				scrolled: false,
+				bookingLoading: false,
+				bookingSuccess: false,
+				bookingError: '',
+
+				bookingForm: {
+					customer_name: '',
+					phone: '',
+					email: '',
+					date: '',
+					time: '',
+					guests: '2',
+					note: ''
+				},
+
+				async init() {
+					await Promise.all([
+						this.loadInfo(),
+						this.loadMenu(),
+						this.loadFeatured(),
+						this.loadGallery(),
+						this.loadReviews(),
+						this.loadPromotions()
+					]);
+
+					// Set default date to today
+					const today = new Date().toISOString().split('T')[0];
+					this.bookingForm.date = today;
+
+					// Update page title
+					if (this.info.name) {
+						document.title = this.info.name;
+					}
+
+					// Track page view
+					this.trackPageView();
+				},
+
+				trackPageView() {
+					fetch('/api/stats/track', {
+						method: 'POST',
+						headers: { 'Content-Type': 'application/json' },
+						body: JSON.stringify({
+							page_url: window.location.pathname,
+							referrer: document.referrer
+						})
+					}).catch(() => { });
+				},
+
+				async loadInfo() {
+					try {
+						const response = await fetch('/api/content/info');
+						this.info = await response.json();
+
+						// Update favicon if exists
+						if (this.info.favicon_url) {
+							const link = document.getElementById('dynamic-favicon') || document.querySelector("link[rel*='icon']");
+							if (link) {
+								link.href = this.info.favicon_url;
+							}
+						}
+
+						// Update SEO meta tags
+						if (this.info.meta_description) {
+							document.getElementById('meta-description')?.setAttribute('content', this.info.meta_description);
+							document.getElementById('og-description')?.setAttribute('content', this.info.meta_description);
+						}
+						if (this.info.meta_keywords) {
+							document.getElementById('meta-keywords')?.setAttribute('content', this.info.meta_keywords);
+						}
+						if (this.info.name) {
+							document.getElementById('og-title')?.setAttribute('content', this.info.name);
+						}
+						if (this.info.og_image) {
+							document.getElementById('og-image')?.setAttribute('content', this.info.og_image);
+						} else if (this.info.banner_url) {
+							document.getElementById('og-image')?.setAttribute('content', window.location.origin + this.info.banner_url);
+						}
+					} catch (error) {
+						console.error('Error loading restaurant info:', error);
+					}
+				},
+
+				async loadMenu() {
+					try {
+						const response = await fetch('/api/menu');
+						this.menu = await response.json();
+						this.categories = [...new Set(this.menu.map(item => item.category).filter(Boolean))];
+					} catch (error) {
+						console.error('Error loading menu:', error);
+					}
+				},
+
+				async loadFeatured() {
+					try {
+						const response = await fetch('/api/menu/featured');
+						this.featuredMenu = await response.json();
+					} catch (error) {
+						console.error('Error loading featured menu:', error);
+					}
+				},
+
+				async loadGallery() {
+					try {
+						const response = await fetch('/api/content/gallery');
+						this.gallery = await response.json();
+					} catch (error) {
+						console.error('Error loading gallery:', error);
+					}
+				},
+
+				async loadReviews() {
+					try {
+						const response = await fetch('/api/reviews');
+						this.reviews = await response.json();
+					} catch (error) {
+						console.error('Error loading reviews:', error);
+					}
+				},
+
+				async loadPromotions() {
+					try {
+						const response = await fetch('/api/promotions');
+						this.promotions = await response.json();
+					} catch (error) {
+						console.error('Error loading promotions:', error);
+					}
+				},
+
+				async submitBooking() {
+					this.bookingLoading = true;
+					this.bookingSuccess = false;
+					this.bookingError = '';
+
+					try {
+						const response = await fetch('/api/booking', {
+							method: 'POST',
+							headers: { 'Content-Type': 'application/json' },
+							body: JSON.stringify(this.bookingForm)
+						});
+
+						const data = await response.json();
+
+						if (response.ok) {
+							this.bookingSuccess = true;
+							// Reset form
+							this.bookingForm = {
+								customer_name: '',
+								phone: '',
+								email: '',
+								date: new Date().toISOString().split('T')[0],
+								time: '',
+								guests: '2',
+								note: ''
+							};
+						} else {
+							this.bookingError = data.error || 'Có lỗi xảy ra, vui lòng thử lại.';
+						}
+					} catch (error) {
+						this.bookingError = 'Lỗi kết nối, vui lòng thử lại.';
+					}
+
+					this.bookingLoading = false;
+
+					// Auto hide success message after 5s
+					if (this.bookingSuccess) {
+						setTimeout(() => this.bookingSuccess = false, 5000);
+					}
+				},
+
+				get filteredMenu() {
+					if (this.selectedCategory === 'all') {
+						return this.menu;
+					}
+					return this.menu.filter(item => item.category === this.selectedCategory);
+				},
+
+				formatPrice(price) {
+					return new Intl.NumberFormat('vi-VN', {
+						style: 'currency',
+						currency: 'VND'
+					}).format(price);
+				}
+			}
+		}
+	</script>
+</body>
+
+</html>

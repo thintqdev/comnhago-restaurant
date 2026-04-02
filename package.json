@@ -1,0 +1,29 @@
+{
+	"name": "restaurant-website",
+	"version": "1.0.0",
+	"description": "Website quảng bá nhà hàng với trang admin",
+	"main": "server.js",
+	"scripts": {
+		"start": "node server.js",
+		"dev": "nodemon server.js"
+	},
+	"keywords": [
+		"restaurant",
+		"admin",
+		"cms"
+	],
+	"author": "",
+	"license": "ISC",
+	"dependencies": {
+		"express": "^4.18.2",
+		"better-sqlite3": "^9.2.2",
+		"jsonwebtoken": "^9.0.2",
+		"bcryptjs": "^2.4.3",
+		"multer": "^1.4.5-lts.1",
+		"dotenv": "^16.3.1",
+		"cookie-parser": "^1.4.6"
+	},
+	"devDependencies": {
+		"nodemon": "^3.0.2"
+	}
+}
