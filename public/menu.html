@@ -2,418 +2,615 @@
 <html lang="vi">
 
 <head>
-	<meta charset="UTF-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>Thực Đơn - Nhà Hàng</title>
-	<script src="https://cdn.tailwindcss.com"></script>
-	<script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
-	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-	<script>
-		tailwind.config = {
-			theme: {
-				extend: {
-					colors: {
-						primary: {
-							50: '#fef7ee',
-							100: '#fdedd3',
-							200: '#fad7a5',
-							300: '#f6ba6d',
-							400: '#f19333',
-							500: '#ee7711',
-							600: '#df5c08',
-							700: '#b94309',
-							800: '#93360f',
-							900: '#772e0f'
-						}
-					}
-				}
-			}
-		}
-	</script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Thực Đơn - Nhà Hàng</title>
+  <meta name="description" id="meta-description" content="">
+  <meta name="keywords" id="meta-keywords" content="">
+  <meta property="og:type" content="website">
+  <meta property="og:title" id="og-title" content="Thực Đơn - Nhà Hàng">
+  <meta property="og:description" id="og-description" content="">
+  <meta property="og:image" id="og-image" content="">
+  <meta property="og:url" content="">
+  <link rel="canonical" href="">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    :root {
+      --cream: #F8F3EC;
+      --warm: #EFE6D8;
+      --warm2: #DDD0BB;
+      --brown: #3A2110;
+      --brown2: #6B3E26;
+      --wood: #8B5E3C;
+      --gold: #B8882A;
+      --gold2: #D4A84B;
+      --muted: #8A6A50;
+      --text: #231208;
+      --div: rgba(58, 33, 16, 0.12);
+    }
+
+    [x-cloak] {
+      display: none !important;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      background: var(--cream);
+    }
+
+    .nav-link {
+      position: relative;
+      padding-bottom: 2px;
+      color: var(--brown);
+      font-weight: 500;
+      transition: color .3s;
+    }
+
+    .nav-link::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 0;
+      height: 2px;
+      background: var(--gold);
+      transition: width .3s;
+    }
+
+    .nav-link:hover {
+      color: var(--gold);
+    }
+
+    .nav-link:hover::after {
+      width: 100%;
+    }
+
+    .nav-link-active {
+      color: var(--gold);
+    }
+
+    .nav-link-active::after {
+      width: 100%;
+    }
+
+    .btn-nav-cta {
+      background: var(--brown);
+      color: var(--cream);
+      padding: 8px 22px;
+      font-size: 14px;
+      font-weight: 600;
+      letter-spacing: .5px;
+      transition: background .3s;
+      white-space: nowrap;
+    }
+
+    .btn-nav-cta:hover {
+      background: var(--brown2);
+    }
+
+    .section-label {
+      font-size: 11px;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: var(--gold);
+      font-weight: 600;
+    }
+
+    .btn-gold {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--gold);
+      color: var(--brown);
+      padding: 10px 24px;
+      font-weight: 600;
+      font-size: 14px;
+      letter-spacing: .5px;
+      border: none;
+      cursor: pointer;
+      transition: background .3s;
+    }
+
+    .btn-gold:hover {
+      background: var(--gold2);
+    }
+
+    .menu-card {
+      background: white;
+      overflow: hidden;
+      transition: box-shadow .3s, transform .3s;
+    }
+
+    .menu-card:hover {
+      box-shadow: 0 14px 40px rgba(58, 33, 16, .12);
+      transform: translateY(-3px);
+    }
+
+    .cat-btn {
+      padding: 8px 20px;
+      font-size: 13px;
+      font-weight: 500;
+      border: 1px solid var(--warm2);
+      cursor: pointer;
+      transition: all .25s;
+      background: white;
+      color: var(--muted);
+    }
+
+    .cat-btn:hover,
+    .cat-btn.active {
+      background: var(--brown);
+      color: var(--cream);
+      border-color: var(--brown);
+    }
+
+    .res-input {
+      width: 100%;
+      padding: 10px 14px;
+      background: var(--warm);
+      border: 1px solid var(--warm2);
+      font-size: 14px;
+      transition: border-color .3s;
+      outline: none;
+    }
+
+    .res-input:focus {
+      border-color: var(--gold);
+    }
+
+    .star-btn {
+      font-size: 22px;
+      cursor: pointer;
+      transition: transform .15s;
+    }
+
+    .star-btn:hover {
+      transform: scale(1.15);
+    }
+
+    .review-item {
+      padding: 16px 0;
+      border-bottom: 1px solid var(--div);
+    }
+
+    .review-item:last-child {
+      border-bottom: none;
+    }
+
+    .social-btn {
+      width: 36px;
+      height: 36px;
+      background: rgba(255, 255, 255, .08);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--warm2);
+      transition: all .3s;
+    }
+
+    .social-btn:hover {
+      background: var(--gold);
+      color: var(--brown);
+    }
+  </style>
+  <script type="application/ld+json" id="product-schema">
+  {
+    "@context": "https://schema.org",
+    "@type": "Product",
+    "name": "",
+    "description": "",
+    "image": "",
+    "offers": {
+      "@type": "AggregateOffer",
+      "priceCurrency": "VND",
+      "lowPrice": "",
+      "highPrice": "",
+      "offerCount": ""
+    },
+    "aggregateRating": {
+      "@type": "AggregateRating",
+      "ratingValue": "",
+      "reviewCount": ""
+    }
+  }
+  </script>
 </head>
 
-<body class="bg-gray-50" x-data="pageData()">
-	<!-- Navigation -->
-	<nav class="bg-white/95 backdrop-blur-md shadow-sm border-b transition-all duration-300 py-4">
-		<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-			<div class="flex justify-between items-center">
-				<div class="flex items-center gap-3">
-					<template x-if="info.logo_url">
-						<img :src="info.logo_url" alt="Logo" class="h-10 w-auto">
-					</template>
-					<div x-show="!info.logo_url"
-						class="w-10 h-10 bg-gradient-to-br from-primary-400 to-primary-600 rounded-xl flex items-center justify-center">
-						<i class="fas fa-utensils text-white"></i>
-					</div>
-					<h1 class="text-xl font-bold text-gray-800" x-text="info.name || 'Nhà Hàng'"></h1>
-				</div>
+<body x-data="pageData()" x-init="init()">
 
-				<!-- Desktop Menu -->
-				<div class="hidden md:flex items-center space-x-8">
-					<a href="/" class="text-gray-700 hover:text-primary-600 font-medium py-2 transition">Trang
-						chủ</a>
-					<a x-show="info.show_menu" href="/menu"
-						class="text-gray-700 hover:text-primary-600 font-medium py-2 transition">Thực
-						đơn</a>
-					<a x-show="info.show_gallery" href="#gallery"
-						class="text-gray-700 hover:text-primary-600 font-medium py-2 transition">Hình
-						ảnh</a>
-					<a href="/blog" class="text-gray-700 hover:text-primary-600 font-medium py-2 transition">Blog</a>
-					<a href="#contact" class="text-gray-700 hover:text-primary-600 font-medium py-2 transition">Liên
-						hệ</a>
-					<a href="#booking"
-						class="px-5 py-2 bg-primary-500 text-white rounded-full font-medium hover:bg-primary-600 transition shadow-lg shadow-primary-500/30">
-						<i class="fas fa-calendar-check mr-2"></i><span>Đặt bàn</span>
-					</a>
-				</div>
+  <!-- NAV -->
+  <nav class="fixed w-full z-50 py-4 transition-all duration-300 shadow-sm"
+    style="background:rgba(248,243,236,0.96);backdrop-filter:blur(12px)">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex justify-between items-center">
+        <a href="/" class="flex items-center gap-3">
+          <template x-if="info.logo_url">
+            <img :src="info.logo_url" alt="Logo" class="h-10 w-auto">
+          </template>
+          <div x-show="!info.logo_url" class="w-9 h-9 flex items-center justify-center" style="background:var(--brown)">
+            <i class="fas fa-utensils text-sm" style="color:var(--gold)"></i>
+          </div>
+          <h1 class="text-lg font-bold" style="color:var(--brown)" x-text="info.name || 'Nhà Hàng'"></h1>
+        </a>
+        <div class="hidden md:flex items-center gap-7">
+          <a href="/" class="nav-link">Trang chủ</a>
+          <a x-show="info.show_menu" href="/menu" class="nav-link nav-link-active">Thực đơn</a>
+          <a x-show="info.show_gallery" href="/#gallery" class="nav-link">Hình ảnh</a>
+          <a href="/blog" class="nav-link">Blog</a>
+          <a href="/#contact" class="nav-link">Liên hệ</a>
+          <a href="/#booking" class="btn-nav-cta"><i class="fas fa-calendar-check mr-2"></i>Đặt bàn</a>
+        </div>
+        <button @click="mobileMenu = !mobileMenu" class="md:hidden p-2" style="color:var(--brown)">
+          <i class="fas fa-bars text-xl"></i>
+        </button>
+      </div>
+      <div x-show="mobileMenu" x-transition class="md:hidden pt-4 pb-3 border-t mt-3" style="border-color:var(--div)">
+        <div class="flex flex-col gap-3">
+          <a href="/" class="nav-link py-1">Trang chủ</a>
+          <a x-show="info.show_menu" href="/menu" class="nav-link nav-link-active py-1">Thực đơn</a>
+          <a x-show="info.show_gallery" href="/#gallery" class="nav-link py-1">Hình ảnh</a>
+          <a href="/blog" class="nav-link py-1">Blog</a>
+          <a href="/#contact" class="nav-link py-1">Liên hệ</a>
+          <a href="/#booking" class="btn-nav-cta self-start mt-1">Đặt bàn</a>
+        </div>
+      </div>
+    </div>
+  </nav>
 
-				<!-- Mobile Menu Button -->
-				<button @click="mobileMenu = !mobileMenu" class="md:hidden p-2 text-gray-600 hover:text-primary-500">
-					<i class="fas fa-bars text-xl"></i>
-				</button>
-			</div>
+  <div class="h-20"></div>
 
-			<!-- Mobile Menu -->
-			<div x-show="mobileMenu" x-transition class="md:hidden mt-4 pb-4 border-t border-gray-100 pt-4">
-				<div class="flex flex-col space-y-3">
-					<a href="/" @click="mobileMenu = false"
-						class="text-gray-700 hover:text-primary-600 font-medium py-2">Trang chủ</a>
-					<a x-show="info.show_menu" href="/menu" @click="mobileMenu = false"
-						class="text-gray-700 hover:text-primary-600 font-medium py-2">Thực đơn</a>
-					<a x-show="info.show_gallery" href="#gallery" @click="mobileMenu = false"
-						class="text-gray-700 hover:text-primary-600 font-medium py-2">Hình ảnh</a>
-					<a href="/blog" @click="mobileMenu = false"
-						class="text-gray-700 hover:text-primary-600 font-medium py-2">Blog</a>
-					<a href="#contact" @click="mobileMenu = false"
-						class="text-gray-700 hover:text-primary-600 font-medium py-2">Liên hệ</a>
-					<a href="#booking" @click="mobileMenu = false" class="text-primary-600 font-medium py-2">Đặt bàn</a>
-				</div>
-			</div>
-		</div>
-	</nav>
+  <!-- MENU APP -->
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10" x-data="menuApp()">
 
-	<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8" x-data="menuApp()">
-		<!-- Menu List -->
-		<div x-show="!selectedItem" x-transition>
-			<h1 class="text-3xl font-bold text-gray-900 mb-8">Thực Đơn</h1>
+    <!-- LIST VIEW -->
+    <div x-show="!selectedItem" x-transition>
+      <div class="mb-10">
+        <span class="section-label">Nhà hàng</span>
+        <h1 class="text-3xl font-bold mt-2" style="color:var(--brown)">Thực Đơn</h1>
+      </div>
 
-			<!-- Categories Filter -->
-			<div class="mb-6">
-				<div class="flex flex-wrap gap-2">
-					<button @click="selectedCategory = null"
-						:class="selectedCategory === null ? 'bg-primary-600 text-white' : 'bg-gray-200 text-gray-700'"
-						class="px-4 py-2 rounded-full text-sm font-medium">
-						Tất cả
-					</button>
-					<template x-for="category in categories" :key="category">
-						<button @click="selectedCategory = category"
-							:class="selectedCategory === category ? 'bg-primary-600 text-white' : 'bg-gray-200 text-gray-700'"
-							class="px-4 py-2 rounded-full text-sm font-medium" x-text="category"></button>
-					</template>
-				</div>
-			</div>
+      <!-- Category Filter -->
+      <div class="flex flex-wrap gap-2 mb-8">
+        <button @click="selectedCategory = null" class="cat-btn" :class="selectedCategory === null ? 'active' : ''">Tất
+          cả</button>
+        <template x-for="category in categories" :key="category">
+          <button @click="selectedCategory = category" class="cat-btn"
+            :class="selectedCategory === category ? 'active' : ''" x-text="category"></button>
+        </template>
+      </div>
 
-			<!-- Menu Grid -->
-			<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-				<template x-for="item in filteredItems" :key="item.id">
-					<div class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow cursor-pointer"
-						@click="selectItem(item)">
-						<div class="aspect-w-16 aspect-h-9 bg-gray-200">
-							<img :src="item.image_url || '/placeholder-food.jpg'" :alt="item.name"
-								class="w-full h-48 object-cover">
-						</div>
-						<div class="p-4">
-							<h3 class="text-lg font-semibold text-gray-900 mb-2" x-text="item.name"></h3>
-							<p class="text-gray-600 text-sm mb-2" x-text="item.description"></p>
-							<!-- Rating Display -->
-							<div x-show="item.averageRating > 0" class="flex items-center mb-2">
-								<div class="flex text-yellow-400 mr-1">
-									<template x-for="i in 5" :key="i">
-										<i
-											:class="i <= Math.round(item.averageRating) ? 'fas fa-star' : 'far fa-star'"></i>
-									</template>
-								</div>
-								<span class="text-xs text-gray-600"
-									x-text="item.averageRating.toFixed(1) + ' (' + (item.reviewCount || 0) + ')'"></span>
-							</div>
-							<div class="flex justify-between items-center">
-								<span class="text-primary-600 font-bold" x-text="formatPrice(item.price)"></span>
-								<span class="text-xs text-gray-500" x-text="item.category"></span>
-							</div>
-						</div>
-					</div>
-				</template>
-			</div>
-		</div>
+      <!-- Menu Grid -->
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <template x-for="item in filteredItems" :key="item.id">
+          <div class="menu-card cursor-pointer group" @click="selectItem(item)">
+            <div class="overflow-hidden" style="height:200px">
+              <img :src="item.image_url || 'https://via.placeholder.com/400x200?text=Food'" :alt="item.name"
+                class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
+            </div>
+            <div class="p-5">
+              <div class="flex justify-between items-start gap-2 mb-2">
+                <h3 class="font-bold text-base leading-tight" style="color:var(--brown)" x-text="item.name"></h3>
+                <span class="font-bold text-sm whitespace-nowrap" style="color:var(--gold)"
+                  x-text="formatPrice(item.price)"></span>
+              </div>
+              <p class="text-sm leading-relaxed mb-3" style="color:var(--muted)" x-text="item.description"></p>
+              <div x-show="item.averageRating > 0" class="flex items-center gap-2">
+                <div class="flex gap-0.5" style="color:var(--gold2)">
+                  <template x-for="i in 5" :key="i">
+                    <i :class="i <= Math.round(item.averageRating) ? 'fas fa-star' : 'far fa-star'" class="text-xs"></i>
+                  </template>
+                </div>
+                <span class="text-xs" style="color:var(--muted)"
+                  x-text="item.averageRating.toFixed(1) + ' (' + (item.reviewCount || 0) + ')'"></span>
+              </div>
+              <div class="mt-3 flex items-center justify-between">
+                <span class="text-xs px-2 py-1" style="background:var(--warm);color:var(--muted)"
+                  x-text="item.category"></span>
+                <span class="text-xs font-medium" style="color:var(--gold)">Xem chi tiết <i
+                    class="fas fa-arrow-right ml-1"></i></span>
+              </div>
+            </div>
+          </div>
+        </template>
+      </div>
 
-		<!-- Menu Detail -->
-		<div x-show="selectedItem" x-transition>
-			<div class="mb-4">
-				<button @click="selectedItem = null" class="text-primary-600 hover:text-primary-700">
-					<i class="fas fa-arrow-left mr-2"></i>Quay lại thực đơn
-				</button>
-			</div>
+      <div x-show="filteredItems.length === 0" class="text-center py-20">
+        <i class="fas fa-utensils text-5xl mb-4" style="color:var(--warm2)"></i>
+        <p style="color:var(--muted)">Chưa có món ăn trong danh mục này</p>
+      </div>
+    </div>
 
-			<div class="bg-white rounded-lg shadow-md overflow-hidden">
-				<div class="md:flex">
-					<div class="md:w-1/2">
-						<img :src="selectedItem.image_url || '/placeholder-food.jpg'" :alt="selectedItem.name"
-							class="w-full h-64 md:h-full object-cover">
-					</div>
-					<div class="md:w-1/2 p-6">
-						<h1 class="text-3xl font-bold text-gray-900 mb-4" x-text="selectedItem.name"></h1>
-						<p class="text-gray-600 mb-4" x-text="selectedItem.description"></p>
-						<div class="flex justify-between items-center mb-6">
-							<span class="text-2xl font-bold text-primary-600"
-								x-text="formatPrice(selectedItem.price)"></span>
-							<span class="text-sm text-gray-500" x-text="selectedItem.category"></span>
-						</div>
+    <!-- DETAIL VIEW -->
+    <div x-show="selectedItem" x-transition>
+      <button @click="selectedItem = null" class="inline-flex items-center gap-2 mb-8 text-sm font-semibold transition"
+        style="color:var(--gold)">
+        <i class="fas fa-arrow-left"></i>Quay lại thực đơn
+      </button>
 
-						<!-- Reviews Section -->
-						<div class="border-t pt-6">
-							<h3 class="text-xl font-semibold mb-4">Đánh giá món ăn</h3>
+      <div style="background:white">
+        <div class="md:flex">
+          <div class="md:w-1/2 overflow-hidden" style="min-height:300px">
+            <img :src="selectedItem.image_url || 'https://via.placeholder.com/600x400?text=Food'"
+              :alt="selectedItem.name" class="w-full h-full object-cover" style="min-height:300px">
+          </div>
+          <div class="md:w-1/2 p-8">
+            <h1 class="text-3xl font-bold mb-3" style="color:var(--brown)" x-text="selectedItem.name"></h1>
+            <p class="text-base leading-relaxed mb-5" style="color:var(--muted)" x-text="selectedItem.description"></p>
+            <div class="flex justify-between items-center mb-6 pb-6" style="border-bottom:1px solid var(--div)">
+              <span class="text-2xl font-bold" style="color:var(--gold)"
+                x-text="formatPrice(selectedItem.price)"></span>
+              <span class="text-xs px-3 py-1" style="background:var(--warm);color:var(--muted)"
+                x-text="selectedItem.category"></span>
+            </div>
 
-							<!-- Average Rating -->
-							<div class="mb-4" x-show="reviews.length > 0">
-								<div class="flex items-center mb-2">
-									<div class="flex text-yellow-400 mr-2">
-										<template x-for="i in 5" :key="i">
-											<i :class="i <= averageRating ? 'fas fa-star' : 'far fa-star'"></i>
-										</template>
-									</div>
-									<span class="text-gray-600"
-										x-text="averageRating.toFixed(1) + ' / 5 (' + reviews.length + ' đánh giá)'"></span>
-								</div>
-							</div>
+            <!-- Reviews -->
+            <h3 class="font-bold text-lg mb-4" style="color:var(--brown)">Đánh giá món ăn</h3>
 
-							<!-- Review Form -->
-							<form @submit.prevent="submitReview" class="mb-6 p-4 bg-gray-50 rounded-lg">
-								<h4 class="font-medium mb-3">Viết đánh giá</h4>
-								<div class="mb-3">
-									<label class="block text-sm font-medium text-gray-700 mb-1">Đánh giá</label>
-									<div class="flex">
-										<template x-for="i in 5" :key="i">
-											<button type="button" @click="newReview.rating = i" class="text-2xl">
-												<i
-													:class="i <= newReview.rating ? 'fas fa-star text-yellow-400' : 'far fa-star text-gray-300'"></i>
-											</button>
-										</template>
-									</div>
-								</div>
-								<div class="mb-3">
-									<label class="block text-sm font-medium text-gray-700 mb-1">Tên của bạn</label>
-									<input type="text" x-model="newReview.customer_name"
-										class="w-full px-3 py-2 border border-gray-300 rounded-md"
-										placeholder="Nhập tên...">
-								</div>
-								<div class="mb-3">
-									<label class="block text-sm font-medium text-gray-700 mb-1">Nhận xét</label>
-									<textarea x-model="newReview.review_text" rows="3"
-										class="w-full px-3 py-2 border border-gray-300 rounded-md"
-										placeholder="Viết nhận xét của bạn..."></textarea>
-								</div>
-								<button type="submit"
-									class="bg-primary-600 text-white px-4 py-2 rounded-md hover:bg-primary-700"
-									:disabled="!newReview.rating">
-									Gửi đánh giá
-								</button>
-							</form>
+            <!-- Average -->
+            <div x-show="reviews.length > 0" class="flex items-center gap-2 mb-4">
+              <div class="flex gap-0.5" style="color:var(--gold2)">
+                <template x-for="i in 5" :key="i">
+                  <i :class="i <= averageRating ? 'fas fa-star' : 'far fa-star'" class="text-sm"></i>
+                </template>
+              </div>
+              <span class="text-sm" style="color:var(--muted)"
+                x-text="averageRating.toFixed(1) + ' / 5 (' + reviews.length + ' đánh giá)'"></span>
+            </div>
 
-							<!-- Reviews List -->
-							<div x-show="reviews.length === 0" class="text-gray-500 text-center py-8">
-								Chưa có đánh giá nào. Hãy là người đầu tiên đánh giá món ăn này!
-							</div>
-							<div x-show="reviews.length > 0" class="space-y-4">
-								<template x-for="review in reviews" :key="review.id">
-									<div class="border-b pb-4">
-										<div class="flex justify-between items-start mb-2">
-											<div>
-												<div class="flex text-yellow-400">
-													<template x-for="i in 5" :key="i">
-														<i
-															:class="i <= review.rating ? 'fas fa-star' : 'far fa-star'"></i>
-													</template>
-												</div>
-												<span class="text-sm text-gray-600"
-													x-text="review.customer_name"></span>
-											</div>
-											<span class="text-xs text-gray-500"
-												x-text="formatDate(review.created_at)"></span>
-										</div>
-										<p class="text-gray-700" x-text="review.review_text"></p>
-									</div>
-								</template>
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
-	</div>
+            <!-- Review Form -->
+            <form @submit.prevent="submitReview" class="p-5 mb-6" style="background:var(--warm)">
+              <h4 class="font-semibold text-sm mb-4" style="color:var(--brown)">Viết đánh giá</h4>
+              <div class="mb-3">
+                <label class="block text-xs font-semibold mb-2" style="color:var(--brown)">Đánh giá</label>
+                <div class="flex gap-1">
+                  <template x-for="i in 5" :key="i">
+                    <button type="button" @click="newReview.rating = i" class="star-btn">
+                      <i :class="i <= newReview.rating ? 'fas fa-star' : 'far fa-star'"
+                        :style="i <= newReview.rating ? 'color:var(--gold2)' : 'color:var(--warm2)'"></i>
+                    </button>
+                  </template>
+                </div>
+              </div>
+              <div class="mb-3">
+                <label class="block text-xs font-semibold mb-1" style="color:var(--brown)">Tên của bạn</label>
+                <input type="text" x-model="newReview.customer_name" class="res-input" placeholder="Nhập tên...">
+              </div>
+              <div class="mb-4">
+                <label class="block text-xs font-semibold mb-1" style="color:var(--brown)">Nhận xét</label>
+                <textarea x-model="newReview.review_text" rows="3" class="res-input resize-none"
+                  placeholder="Viết nhận xét của bạn..."></textarea>
+              </div>
+              <button type="submit" class="btn-gold" :disabled="!newReview.rating">
+                <i class="fas fa-paper-plane"></i>Gửi đánh giá
+              </button>
+            </form>
 
-	<script>
-		function pageData() {
-			return {
-				info: {
-					show_promotions: true,
-					show_menu: true,
-					show_gallery: true,
-					show_reviews: true
-				},
-				mobileMenu: false,
-				scrolled: false,
+            <!-- Reviews list -->
+            <div x-show="reviews.length === 0" class="text-center py-6 text-sm" style="color:var(--muted)">
+              Chưa có đánh giá nào. Hãy là người đầu tiên!
+            </div>
+            <div x-show="reviews.length > 0">
+              <template x-for="review in reviews" :key="review.id">
+                <div class="review-item">
+                  <div class="flex justify-between items-start mb-1">
+                    <div>
+                      <div class="flex gap-0.5 mb-1" style="color:var(--gold2)">
+                        <template x-for="i in 5" :key="i">
+                          <i :class="i <= review.rating ? 'fas fa-star' : 'far fa-star'" class="text-xs"></i>
+                        </template>
+                      </div>
+                      <span class="text-sm font-semibold" style="color:var(--brown)"
+                        x-text="review.customer_name"></span>
+                    </div>
+                    <span class="text-xs" style="color:var(--muted)" x-text="formatDate(review.created_at)"></span>
+                  </div>
+                  <p class="text-sm mt-1" style="color:var(--muted)" x-text="review.review_text"></p>
+                </div>
+              </template>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 
-				async init() {
-					await this.loadInfo();
-				},
+  <!-- FOOTER -->
+  <footer class="py-12 mt-12" style="background:var(--text);color:var(--warm)">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-8 mb-10">
+        <div class="col-span-2 md:col-span-1">
+          <div class="flex items-center gap-2 mb-4">
+            <div class="w-8 h-8 flex items-center justify-center" style="background:var(--gold)">
+              <i class="fas fa-utensils text-sm" style="color:var(--brown)"></i>
+            </div>
+            <h3 class="font-bold" style="color:var(--cream)" x-text="info.name || 'Nhà Hàng'"></h3>
+          </div>
+          <p class="text-xs leading-relaxed" style="color:var(--warm2)"
+            x-text="info.description ? info.description.substring(0,100) + '...' : 'Trải nghiệm ẩm thực tuyệt vời'"></p>
+        </div>
+        <div>
+          <h4 class="font-semibold text-sm mb-4" style="color:var(--cream)">Liên kết nhanh</h4>
+          <ul class="space-y-2 text-xs" style="color:var(--warm2)">
+            <li><a href="/" class="hover:text-white transition">Trang chủ</a></li>
+            <li x-show="info.show_menu"><a href="/menu" class="hover:text-white transition">Thực đơn</a></li>
+            <li x-show="info.show_gallery"><a href="/#gallery" class="hover:text-white transition">Hình ảnh</a></li>
+            <li><a href="/#booking" class="hover:text-white transition">Đặt bàn</a></li>
+            <li><a href="/blog" class="hover:text-white transition">Blog</a></li>
+            <li><a href="/#contact" class="hover:text-white transition">Liên hệ</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4 class="font-semibold text-sm mb-4" style="color:var(--cream)">Liên hệ</h4>
+          <div class="space-y-2 text-xs" style="color:var(--warm2)">
+            <p x-text="info.address"></p>
+            <p x-text="info.phone"></p>
+            <p x-text="info.email"></p>
+          </div>
+        </div>
+        <div>
+          <h4 class="font-semibold text-sm mb-4" style="color:var(--cream)">Kết nối</h4>
+          <div class="flex gap-2">
+            <a :href="info.facebook_url || '#'" target="_blank" class="social-btn"><i
+                class="fab fa-facebook-f text-sm"></i></a>
+            <a href="#" class="social-btn"><i class="fab fa-instagram text-sm"></i></a>
+            <a href="#" class="social-btn"><i class="fab fa-tiktok text-sm"></i></a>
+          </div>
+        </div>
+      </div>
+      <div class="border-t pt-6 flex flex-col sm:flex-row justify-between items-center gap-3 text-xs"
+        style="border-color:rgba(255,255,255,.08);color:var(--warm2)">
+        <p>© <span x-text="new Date().getFullYear()"></span> <span x-text="info.name || 'Nhà Hàng'"></span>. All rights
+          reserved.</p>
+        <a href="/admin" class="hover:text-white transition"><i class="fas fa-lock mr-1"></i>Admin</a>
+      </div>
+    </div>
+  </footer>
 
-				async loadInfo() {
-					try {
-						const response = await fetch('/api/content/info');
-						this.info = await response.json();
+  <script>
+    function pageData() {
+      return {
+        info: { show_promotions: true, show_menu: true, show_gallery: true, show_reviews: true },
+        mobileMenu: false,
+        async init() { await this.loadInfo(); },
+        async loadInfo() {
+          try {
+            const response = await fetch('/api/content/info');
+            this.info = await response.json();
+            if (this.info.favicon_url) {
+              const link = document.querySelector("link[rel*='icon']");
+              if (link) link.href = this.info.favicon_url;
+            }
+            document.title = this.info.name ? `${this.info.name} - Thực đơn` : 'Thực đơn - Nhà Hàng';
 
-						// Update favicon if exists
-						if (this.info.favicon_url) {
-							const link = document.getElementById('dynamic-favicon') || document.querySelector("link[rel*='icon']");
-							if (link) {
-								link.href = this.info.favicon_url;
-							}
-						}
+            // Update meta tags  
+            if (this.info.meta_description) {
+              document.getElementById('meta-description')?.setAttribute('content', this.info.meta_description);
+              document.getElementById('og-description')?.setAttribute('content', this.info.meta_description);
+            }
+            if (this.info.meta_keywords) {
+              document.getElementById('meta-keywords')?.setAttribute('content', this.info.meta_keywords);
+            }
+            if (this.info.og_image) {
+              document.getElementById('og-image')?.setAttribute('content', this.info.og_image);
+            }
+            // Set canonical URL
+            document.querySelector('link[rel="canonical"]')?.setAttribute('href', window.location.origin + '/menu');
+          } catch (error) { console.error('Error loading info:', error); }
+        }
+      }
+    }
 
-						// Update page title
-						document.title = this.info.name ? `${this.info.name} - Thực đơn` : 'Thực đơn - Nhà Hàng';
-					} catch (error) {
-						console.error('Error loading info:', error);
-					}
-				}
-			}
-		}
+    function menuApp() {
+      return {
+        items: [],
+        categories: [],
+        selectedCategory: null,
+        selectedItem: null,
+        reviews: [],
+        newReview: { rating: 0, review_text: '', customer_name: '' },
+        averageRating: 0,
 
-		function menuApp() {
-			return {
-				items: [],
-				categories: [],
-				selectedCategory: null,
-				selectedItem: null,
-				reviews: [],
-				newReview: {
-					rating: 0,
-					review_text: '',
-					customer_name: ''
-				},
-				averageRating: 0,
+        init() { this.loadMenuItems(); },
 
-				init() {
-					this.loadMenuItems();
-				},
+        async loadMenuItems() {
+          try {
+            const response = await fetch('/api/menu');
+            this.items = await response.json();
+            this.categories = [...new Set(this.items.map(item => item.category).filter(Boolean))];
+            await this.loadAllReviews();
+          } catch (error) { console.error('Error loading menu:', error); }
+        },
 
-				async loadMenuItems() {
-					try {
-						const response = await fetch('/api/menu');
-						this.items = await response.json();
-						this.categories = [...new Set(this.items.map(item => item.category).filter(Boolean))];
+        async loadAllReviews() {
+          try {
+            const reviewPromises = this.items.map(item =>
+              fetch(`/api/menu/${item.id}/reviews`).then(res => res.json())
+            );
+            const allReviews = await Promise.all(reviewPromises);
+            this.items.forEach((item, index) => {
+              const reviews = allReviews[index];
+              if (reviews && reviews.length > 0) {
+                item.averageRating = reviews.reduce((acc, r) => acc + r.rating, 0) / reviews.length;
+                item.reviewCount = reviews.length;
+              } else { item.averageRating = 0; item.reviewCount = 0; }
+            });
 
-						// Load reviews for all items to calculate average ratings
-						await this.loadAllReviews();
-					} catch (error) {
-						console.error('Error loading menu:', error);
-					}
-				},
+            // Update Product schema with aggregate pricing and ratings
+            const prices = this.items.filter(item => item.price).map(item => item.price);
+            if (prices.length > 0) {
+              const schemaEl = document.getElementById('product-schema');
+              if (schemaEl) {
+                const schema = JSON.parse(schemaEl.textContent);
+                schema.offers.lowPrice = Math.min(...prices);
+                schema.offers.highPrice = Math.max(...prices);
+                schema.offers.offerCount = this.items.length;
+                const avgRating = this.items.reduce((acc, item) => acc + (item.averageRating || 0), 0) / this.items.length;
+                const totalReviews = this.items.reduce((acc, item) => acc + (item.reviewCount || 0), 0);
+                if (avgRating > 0) schema.aggregateRating.ratingValue = avgRating.toFixed(1);
+                if (totalReviews > 0) schema.aggregateRating.reviewCount = totalReviews;
+                schemaEl.textContent = JSON.stringify(schema, null, 2);
+              }
+            }
+          } catch (error) { console.error('Error loading reviews:', error); }
+        },
 
-				async loadAllReviews() {
-					try {
-						const reviewPromises = this.items.map(item =>
-							fetch(`/api/menu/${item.id}/reviews`).then(res => res.json())
-						);
-						const allReviews = await Promise.all(reviewPromises);
+        get filteredItems() {
+          if (!this.selectedCategory) return this.items;
+          return this.items.filter(item => item.category === this.selectedCategory);
+        },
 
-						this.items.forEach((item, index) => {
-							const reviews = allReviews[index];
-							if (reviews && reviews.length > 0) {
-								const sum = reviews.reduce((acc, review) => acc + review.rating, 0);
-								item.averageRating = sum / reviews.length;
-								item.reviewCount = reviews.length;
-							} else {
-								item.averageRating = 0;
-								item.reviewCount = 0;
-							}
-						});
-					} catch (error) {
-						console.error('Error loading reviews:', error);
-					}
-				},
+        async selectItem(item) {
+          this.selectedItem = item;
+          await this.loadReviews(item.id);
+          history.pushState(null, '', `/menu/${item.id}`);
+        },
 
-				get filteredItems() {
-					if (!this.selectedCategory) return this.items;
-					return this.items.filter(item => item.category === this.selectedCategory);
-				},
+        async loadReviews(menuItemId) {
+          try {
+            const response = await fetch(`/api/menu/${menuItemId}/reviews`);
+            this.reviews = await response.json();
+            this.calculateAverageRating();
+          } catch (error) { console.error('Error loading reviews:', error); }
+        },
 
-				async selectItem(item) {
-					this.selectedItem = item;
-					await this.loadReviews(item.id);
-					// Update URL
-					history.pushState(null, '', `/menu/${item.id}`);
-				},
+        calculateAverageRating() {
+          if (this.reviews.length === 0) { this.averageRating = 0; return; }
+          this.averageRating = this.reviews.reduce((acc, r) => acc + r.rating, 0) / this.reviews.length;
+        },
 
-				async loadReviews(menuItemId) {
-					try {
-						const response = await fetch(`/api/menu/${menuItemId}/reviews`);
-						this.reviews = await response.json();
-						this.calculateAverageRating();
-					} catch (error) {
-						console.error('Error loading reviews:', error);
-					}
-				},
+        async submitReview() {
+          if (!this.newReview.rating) return;
+          try {
+            const response = await fetch(`/api/menu/${this.selectedItem.id}/reviews`, {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify(this.newReview)
+            });
+            if (response.ok) {
+              await this.loadReviews(this.selectedItem.id);
+              this.newReview = { rating: 0, review_text: '', customer_name: '' };
+              alert('Cảm ơn bạn đã đánh giá! Đánh giá của bạn đang chờ được duyệt trước khi hiển thị.');
+            } else { alert('Có lỗi xảy ra khi gửi đánh giá'); }
+          } catch (error) { console.error('Error submitting review:', error); alert('Có lỗi xảy ra khi gửi đánh giá'); }
+        },
 
-				calculateAverageRating() {
-					if (this.reviews.length === 0) {
-						this.averageRating = 0;
-						return;
-					}
-					const sum = this.reviews.reduce((acc, review) => acc + review.rating, 0);
-					this.averageRating = sum / this.reviews.length;
-				},
+        formatPrice(price) {
+          return new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(price);
+        },
 
-				async submitReview() {
-					if (!this.newReview.rating) return;
+        formatDate(dateString) {
+          return new Date(dateString).toLocaleDateString('vi-VN');
+        }
+      }
+    }
 
-					try {
-						const response = await fetch(`/api/menu/${this.selectedItem.id}/reviews`, {
-							method: 'POST',
-							headers: {
-								'Content-Type': 'application/json'
-							},
-							body: JSON.stringify(this.newReview)
-						});
-
-						if (response.ok) {
-							await this.loadReviews(this.selectedItem.id);
-							this.newReview = { rating: 0, review_text: '', customer_name: '' };
-							alert('Cảm ơn bạn đã đánh giá! Đánh giá của bạn đang chờ được duyệt trước khi hiển thị.');
-						} else {
-							alert('Có lỗi xảy ra khi gửi đánh giá');
-						}
-					} catch (error) {
-						console.error('Error submitting review:', error);
-						alert('Có lỗi xảy ra khi gửi đánh giá');
-					}
-				},
-
-				formatPrice(price) {
-					return new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(price);
-				},
-
-				formatDate(dateString) {
-					return new Date(dateString).toLocaleDateString('vi-VN');
-				}
-			}
-		}
-
-		// Handle browser back button
-		window.addEventListener('popstate', function () {
-			location.reload();
-		});
-	</script>
+    window.addEventListener('popstate', function () { location.reload(); });
+  </script>
 </body>
 
 </html>

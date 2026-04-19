@@ -5,40 +5,153 @@
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<title x-data="blogPage()" x-text="pageTitle">Blog - Nhà Hàng</title>
-	<meta name="description" content="Blog chia sẻ kinh nghiệm ẩm thực, công thức nấu ăn và tin tức nhà hàng">
+	<meta name="description" id="meta-description"
+		content="Blog chia sẻ kinh nghiệm ẩm thực, công thức nấu ăn và tin tức nhà hàng">
+	<meta name="keywords" id="meta-keywords" content="">
+	<meta property="og:type" content="website">
+	<meta property="og:title" id="og-title" content="Blog - Nhà Hàng">
+	<meta property="og:description" id="og-description" content="">
+	<meta property="og:image" id="og-image" content="">
+	<meta property="og:url" content="">
+	<link rel="canonical" href="">
 	<script src="https://cdn.tailwindcss.com"></script>
 	<script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-	<script>
-		tailwind.config = {
-			theme: {
-				extend: {
-					colors: {
-						primary: {
-							50: '#fff7ed',
-							100: '#ffedd5',
-							200: '#fed7aa',
-							300: '#fdba74',
-							400: '#fb923c',
-							500: '#f97316',
-							600: '#ea580c',
-							700: '#c2410c',
-							800: '#9a3412',
-							900: '#7c2d12'
-						}
-					}
-				}
-			}
-		}
-	</script>
 	<style>
+		:root {
+			--cream: #F8F3EC;
+			--warm: #EFE6D8;
+			--warm2: #DDD0BB;
+			--brown: #3A2110;
+			--brown2: #6B3E26;
+			--wood: #8B5E3C;
+			--gold: #B8882A;
+			--gold2: #D4A84B;
+			--muted: #8A6A50;
+			--text: #231208;
+			--div: rgba(58, 33, 16, 0.12);
+		}
+
 		[x-cloak] {
 			display: none !important;
+		}
+
+		html {
+			scroll-behavior: smooth;
+		}
+
+		body {
+			background: var(--cream);
+		}
+
+		.nav-link {
+			position: relative;
+			padding-bottom: 2px;
+			color: var(--brown);
+			font-weight: 500;
+			transition: color .3s;
+		}
+
+		.nav-link::after {
+			content: '';
+			position: absolute;
+			bottom: 0;
+			left: 0;
+			width: 0;
+			height: 2px;
+			background: var(--gold);
+			transition: width .3s;
+		}
+
+		.nav-link:hover {
+			color: var(--gold);
+		}
+
+		.nav-link:hover::after {
+			width: 100%;
+		}
+
+		.nav-link-active {
+			color: var(--gold);
+		}
+
+		.nav-link-active::after {
+			width: 100%;
+		}
+
+		.btn-nav-cta {
+			background: var(--brown);
+			color: var(--cream);
+			padding: 8px 22px;
+			font-size: 14px;
+			font-weight: 600;
+			letter-spacing: .5px;
+			transition: background .3s;
+			white-space: nowrap;
+		}
+
+		.btn-nav-cta:hover {
+			background: var(--brown2);
+		}
+
+		.section-label {
+			font-size: 11px;
+			letter-spacing: 3px;
+			text-transform: uppercase;
+			color: var(--gold);
+			font-weight: 600;
+		}
+
+		.btn-gold {
+			display: inline-flex;
+			align-items: center;
+			gap: 8px;
+			background: var(--gold);
+			color: var(--brown);
+			padding: 11px 26px;
+			font-weight: 600;
+			font-size: 14px;
+			letter-spacing: .5px;
+			border: none;
+			cursor: pointer;
+			transition: background .3s;
+		}
+
+		.btn-gold:hover {
+			background: var(--gold2);
+		}
+
+		.social-btn {
+			width: 36px;
+			height: 36px;
+			background: rgba(255, 255, 255, .08);
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			color: var(--warm2);
+			transition: all .3s;
+		}
+
+		.social-btn:hover {
+			background: var(--gold);
+			color: var(--brown);
+		}
+
+		.blog-card {
+			background: white;
+			overflow: hidden;
+			transition: box-shadow .3s, transform .3s;
+		}
+
+		.blog-card:hover {
+			box-shadow: 0 16px 48px rgba(58, 33, 16, .13);
+			transform: translateY(-4px);
 		}
 
 		.line-clamp-2 {
 			display: -webkit-box;
 			-webkit-line-clamp: 2;
+			line-clamp: 2;
 			-webkit-box-orient: vertical;
 			overflow: hidden;
 		}
@@ -46,6 +159,7 @@
 		.line-clamp-3 {
 			display: -webkit-box;
 			-webkit-line-clamp: 3;
+			line-clamp: 3;
 			-webkit-box-orient: vertical;
 			overflow: hidden;
 		}
@@ -63,12 +177,14 @@
 			font-size: 1.5rem;
 			font-weight: bold;
 			margin: 2rem 0 1rem;
+			color: var(--brown);
 		}
 
 		.prose h3 {
 			font-size: 1.25rem;
 			font-weight: bold;
-			margin: 1.5rem 0 0.75rem;
+			margin: 1.5rem 0 .75rem;
+			color: var(--brown);
 		}
 
 		.prose ul,
@@ -78,242 +194,232 @@
 		}
 
 		.prose li {
-			margin-bottom: 0.5rem;
+			margin-bottom: .5rem;
 		}
 
 		.prose img {
 			max-width: 100%;
 			height: auto;
-			border-radius: 0.5rem;
 			margin: 1rem 0;
 		}
 
 		.prose blockquote {
-			border-left: 4px solid #f97316;
+			border-left: 3px solid var(--gold);
 			padding-left: 1rem;
 			margin: 1rem 0;
 			font-style: italic;
-			color: #666;
+			color: var(--muted);
 		}
 
 		.prose pre {
 			background: #1e1e1e;
 			color: #fff;
 			padding: 1rem;
-			border-radius: 0.5rem;
 			overflow-x: auto;
 			margin: 1rem 0;
 		}
 
 		.prose a {
-			color: #f97316;
+			color: var(--gold);
 			text-decoration: underline;
 		}
 	</style>
+	<script type="application/ld+json" id="blogposting-schema">
+  {
+    "@context": "https://schema.org",
+    "@type": "BlogPosting",
+    "headline": "",
+    "description": "",
+    "image": "",
+    "datePublished": "",
+    "dateModified": "",
+    "author": {
+      "@type": "Organization",
+      "name": ""
+    },
+    "aggregateRating": {
+      "@type": "AggregateRating",
+      "ratingValue": "",
+      "reviewCount": ""
+    }
+  }
+  </script>
 </head>
 
-<body class="bg-gray-50" x-data="blogPage()" x-init="init()">
-	<!-- Header -->
-	<header class="bg-white/95 backdrop-blur-md shadow-sm fixed w-full z-50 py-4">
+<body x-data="blogPage()" x-init="init()">
+
+	<!-- NAV -->
+	<nav class="fixed w-full z-50 py-4 transition-all duration-300 shadow-sm"
+		style="background:rgba(248,243,236,0.96);backdrop-filter:blur(12px)">
 		<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 			<div class="flex justify-between items-center">
 				<a href="/" class="flex items-center gap-3">
 					<img x-show="info.logo_url" :src="info.logo_url" class="h-10 w-auto">
-					<div x-show="!info.logo_url"
-						class="w-10 h-10 bg-gradient-to-br from-orange-400 to-orange-600 rounded-xl flex items-center justify-center">
-						<i class="fas fa-utensils text-white"></i>
+					<div x-show="!info.logo_url" class="w-9 h-9 flex items-center justify-center"
+						style="background:var(--brown)">
+						<i class="fas fa-utensils text-sm" style="color:var(--gold)"></i>
 					</div>
-					<span class="text-xl font-bold text-gray-800" x-text="info.name || 'Nhà Hàng'"></span>
+					<span class="text-lg font-bold" style="color:var(--brown)" x-text="info.name || 'Nhà Hàng'"></span>
 				</a>
-
-				<!-- Desktop Menu -->
-				<div class="hidden md:flex items-center space-x-8">
-					<a href="/" class="text-gray-700 hover:text-orange-600 font-medium py-2 transition">Trang chủ</a>
-					<a x-show="info.show_menu" href="/#menu"
-						class="text-gray-700 hover:text-orange-600 font-medium py-2 transition">Thực
-						đơn</a>
-					<a x-show="info.show_gallery" href="/#gallery"
-						class="text-gray-700 hover:text-orange-600 font-medium py-2 transition">Hình
-						ảnh</a>
-					<a href="/blog" class="text-orange-500 font-medium py-2">Blog</a>
-					<a href="/#contact" class="text-gray-700 hover:text-orange-600 font-medium py-2 transition">Liên
-						hệ</a>
-					<a href="/#booking"
-						class="px-5 py-2 bg-orange-500 text-white rounded-full font-medium hover:bg-orange-600 transition shadow-lg shadow-orange-500/30">
-						<i class="fas fa-calendar-check mr-2"></i>Đặt bàn
-					</a>
+				<div class="hidden md:flex items-center gap-7">
+					<a href="/" class="nav-link">Trang chủ</a>
+					<a x-show="info.show_menu" href="/menu" class="nav-link">Thực đơn</a>
+					<a x-show="info.show_gallery" href="/#gallery" class="nav-link">Hình ảnh</a>
+					<a href="/blog" class="nav-link nav-link-active">Blog</a>
+					<a href="/#contact" class="nav-link">Liên hệ</a>
+					<a href="/#booking" class="btn-nav-cta"><i class="fas fa-calendar-check mr-2"></i>Đặt bàn</a>
 				</div>
-
-				<!-- Mobile Menu Button -->
-				<button @click="mobileMenu = !mobileMenu" class="md:hidden p-2 text-gray-600 hover:text-orange-500">
+				<button @click="mobileMenu = !mobileMenu" class="md:hidden p-2" style="color:var(--brown)">
 					<i class="fas fa-bars text-xl"></i>
 				</button>
 			</div>
-
-			<!-- Mobile Menu -->
-			<div x-show="mobileMenu" x-transition class="md:hidden mt-4 pb-4 border-t border-gray-100 pt-4">
-				<div class="flex flex-col space-y-3">
-					<a href="/" class="text-gray-700 hover:text-orange-600 font-medium py-2">Trang chủ</a>
-					<a x-show="info.show_menu" href="/#menu"
-						class="text-gray-700 hover:text-orange-600 font-medium py-2">Thực đơn</a>
-					<a x-show="info.show_gallery" href="/#gallery"
-						class="text-gray-700 hover:text-orange-600 font-medium py-2">Hình ảnh</a>
-					<a href="/blog" class="text-orange-500 font-medium py-2">Blog</a>
-					<a href="/#contact" class="text-gray-700 hover:text-orange-600 font-medium py-2">Liên hệ</a>
-					<a href="/#booking"
-						class="inline-flex items-center justify-center px-5 py-2 bg-orange-500 text-white rounded-full font-medium hover:bg-orange-600 transition mt-2">
-						<i class="fas fa-calendar-check mr-2"></i>Đặt bàn
-					</a>
+			<div x-show="mobileMenu" x-transition class="md:hidden pt-4 pb-3 border-t mt-3"
+				style="border-color:var(--div)">
+				<div class="flex flex-col gap-3">
+					<a href="/" class="nav-link py-1">Trang chủ</a>
+					<a x-show="info.show_menu" href="/menu" class="nav-link py-1">Thực đơn</a>
+					<a x-show="info.show_gallery" href="/#gallery" class="nav-link py-1">Hình ảnh</a>
+					<a href="/blog" class="nav-link nav-link-active py-1">Blog</a>
+					<a href="/#contact" class="nav-link py-1">Liên hệ</a>
+					<a href="/#booking" class="btn-nav-cta self-start mt-1">Đặt bàn</a>
 				</div>
 			</div>
 		</div>
-	</header>
+	</nav>
 
-	<!-- Spacer for fixed header -->
 	<div class="h-20"></div>
 
-	<!-- Blog List View -->
-	<main x-show="!selectedPost" class="max-w-6xl mx-auto px-4 py-8">
-		<div class="text-center mb-12">
-			<h1 class="text-4xl font-bold text-gray-800 mb-4">Blog Nhà Hàng</h1>
-			<p class="text-gray-500 text-lg">Chia sẻ câu chuyện, công thức và trải nghiệm ẩm thực</p>
+	<!-- BLOG LIST -->
+	<main x-show="!selectedPost" class="max-w-6xl mx-auto px-4 py-12">
+		<div class="text-center mb-14">
+			<span class="section-label">Nhà hàng</span>
+			<h1 class="text-3xl sm:text-4xl font-bold mt-2" style="color:var(--brown)">Blog &amp; Câu chuyện</h1>
+			<p class="mt-3 text-base" style="color:var(--muted)">Chia sẻ câu chuyện, công thức và trải nghiệm ẩm thực
+			</p>
 		</div>
 
-		<!-- Blog Grid -->
 		<div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
 			<template x-for="post in posts" :key="post.id">
-				<article @click="viewPost(post.slug)"
-					class="bg-white rounded-2xl shadow-sm overflow-hidden hover:shadow-lg transition cursor-pointer group">
-					<div class="relative h-48 bg-gradient-to-r from-orange-400 to-red-500 overflow-hidden">
+				<article @click="viewPost(post.slug)" class="blog-card cursor-pointer group">
+					<div class="relative overflow-hidden" style="height:220px">
 						<img x-show="post.image_url" :src="post.image_url"
-							class="w-full h-full object-cover group-hover:scale-105 transition duration-300">
-						<div x-show="!post.image_url" class="flex items-center justify-center h-full">
-							<i class="fas fa-newspaper text-white text-5xl opacity-50"></i>
+							class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
+						<div x-show="!post.image_url" class="w-full h-full flex items-center justify-center"
+							style="background:linear-gradient(135deg,var(--brown) 0%,var(--wood) 100%)">
+							<i class="fas fa-newspaper text-white text-5xl opacity-30"></i>
 						</div>
 					</div>
 					<div class="p-6">
-						<p class="text-sm text-orange-500 mb-2" x-text="formatDate(post.created_at)"></p>
-						<h2 class="text-xl font-bold text-gray-800 mb-3 group-hover:text-orange-500 transition"
-							x-text="post.title"></h2>
-						<p class="text-gray-500 line-clamp-3" x-text="post.excerpt || ''"></p>
-						<div class="mt-4 flex items-center text-orange-500 font-medium">
+						<p class="text-xs font-medium mb-2" style="color:var(--gold)"
+							x-text="formatDate(post.created_at)"></p>
+						<h2 class="text-lg font-bold mb-3 group-hover:opacity-70 transition line-clamp-2"
+							style="color:var(--brown)" x-text="post.title"></h2>
+						<p class="text-sm leading-relaxed line-clamp-3" style="color:var(--muted)"
+							x-text="post.excerpt || ''"></p>
+						<div class="mt-5 flex items-center gap-2 text-sm font-semibold" style="color:var(--gold)">
 							<span>Đọc tiếp</span>
-							<i class="fas fa-arrow-right ml-2 group-hover:translate-x-1 transition"></i>
+							<i class="fas fa-arrow-right group-hover:translate-x-1 transition"></i>
 						</div>
 					</div>
 				</article>
 			</template>
 		</div>
 
-		<!-- Empty State -->
-		<div x-show="posts.length === 0" class="text-center py-20">
-			<i class="fas fa-newspaper text-6xl text-gray-200 mb-4"></i>
-			<p class="text-gray-500 text-lg">Chưa có bài viết nào</p>
+		<div x-show="posts.length === 0" class="text-center py-24">
+			<i class="fas fa-newspaper text-6xl mb-4" style="color:var(--warm2)"></i>
+			<p style="color:var(--muted)">Chưa có bài viết nào</p>
 		</div>
 	</main>
 
-	<!-- Single Post View -->
-	<main x-show="selectedPost" x-cloak class="max-w-4xl mx-auto px-4 py-8">
+	<!-- SINGLE POST -->
+	<main x-show="selectedPost" x-cloak class="max-w-4xl mx-auto px-4 py-12">
 		<button @click="selectedPost = null; history.pushState({}, '', '/blog')"
-			class="inline-flex items-center text-orange-500 hover:text-orange-600 mb-8 font-medium">
-			<i class="fas fa-arrow-left mr-2"></i>
-			<span>Quay lại danh sách</span>
+			class="inline-flex items-center gap-2 mb-8 text-sm font-semibold transition" style="color:var(--gold)">
+			<i class="fas fa-arrow-left"></i>Quay lại danh sách
 		</button>
-
-		<article class="bg-white rounded-2xl shadow-sm overflow-hidden">
-			<div x-show="selectedPost?.image_url" class="h-64 md:h-96">
+		<article style="background:white">
+			<div x-show="selectedPost?.image_url" style="height:320px;overflow:hidden" class="md:h-96">
 				<img :src="selectedPost?.image_url" class="w-full h-full object-cover">
 			</div>
 			<div class="p-8 md:p-12">
-				<p class="text-sm text-orange-500 mb-4" x-text="formatDate(selectedPost?.created_at)"></p>
-				<h1 class="text-3xl md:text-4xl font-bold text-gray-800 mb-6" x-text="selectedPost?.title"></h1>
-
-				<div class="prose text-gray-600 max-w-none" x-html="selectedPost?.content"></div>
+				<p class="text-xs font-medium mb-4" style="color:var(--gold)"
+					x-text="formatDate(selectedPost?.created_at)"></p>
+				<h1 class="text-3xl md:text-4xl font-bold mb-8 leading-tight" style="color:var(--brown)"
+					x-text="selectedPost?.title"></h1>
+				<div class="prose text-base max-w-none leading-relaxed" style="color:var(--muted)"
+					x-html="selectedPost?.content"></div>
 			</div>
 		</article>
-
-		<!-- Share Buttons -->
-		<div class="mt-8 flex items-center gap-4">
-			<span class="text-gray-500">Chia sẻ:</span>
+		<div class="mt-8 flex items-center gap-3">
+			<span class="text-sm font-medium" style="color:var(--muted)">Chia sẻ:</span>
 			<a :href="'https://www.facebook.com/sharer/sharer.php?u=' + encodeURIComponent(window.location.href)"
 				target="_blank"
-				class="w-10 h-10 bg-blue-600 text-white rounded-full flex items-center justify-center hover:bg-blue-700 transition">
-				<i class="fab fa-facebook-f"></i>
+				class="w-9 h-9 bg-blue-600 text-white rounded-full flex items-center justify-center hover:bg-blue-700 transition">
+				<i class="fab fa-facebook-f text-sm"></i>
 			</a>
 			<a :href="'https://twitter.com/intent/tweet?url=' + encodeURIComponent(window.location.href)"
 				target="_blank"
-				class="w-10 h-10 bg-sky-500 text-white rounded-full flex items-center justify-center hover:bg-sky-600 transition">
-				<i class="fab fa-twitter"></i>
+				class="w-9 h-9 bg-sky-500 text-white rounded-full flex items-center justify-center hover:bg-sky-600 transition">
+				<i class="fab fa-twitter text-sm"></i>
 			</a>
-			<button @click="copyLink()"
-				class="w-10 h-10 bg-gray-200 text-gray-600 rounded-full flex items-center justify-center hover:bg-gray-300 transition">
-				<i class="fas fa-link"></i>
+			<button @click="copyLink()" class="w-9 h-9 rounded-full flex items-center justify-center transition"
+				style="background:var(--warm);color:var(--muted)">
+				<i class="fas fa-link text-sm"></i>
 			</button>
 		</div>
 	</main>
 
-	<!-- Footer -->
-	<footer class="bg-gray-900 text-white py-8 sm:py-12 mt-12">
+	<!-- FOOTER -->
+	<footer class="py-12 mt-12" style="background:var(--text);color:var(--warm)">
 		<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-			<div class="grid grid-cols-2 md:grid-cols-3 gap-6 sm:gap-8 mb-6 sm:mb-8">
+			<div class="grid grid-cols-2 md:grid-cols-4 gap-8 mb-10">
 				<div class="col-span-2 md:col-span-1">
-					<div class="flex items-center gap-2 sm:gap-3 mb-3 sm:mb-4">
-						<img x-show="info.logo_url" :src="info.logo_url" class="h-8 sm:h-10 w-auto">
-						<div x-show="!info.logo_url"
-							class="w-8 h-8 sm:w-10 sm:h-10 bg-gradient-to-br from-orange-400 to-orange-600 rounded-lg sm:rounded-xl flex items-center justify-center">
-							<i class="fas fa-utensils text-white text-sm sm:text-base"></i>
+					<div class="flex items-center gap-2 mb-4">
+						<div class="w-8 h-8 flex items-center justify-center" style="background:var(--gold)">
+							<i class="fas fa-utensils text-sm" style="color:var(--brown)"></i>
 						</div>
-						<h3 class="text-base sm:text-xl font-bold" x-text="info.name || 'Nhà Hàng'"></h3>
+						<h3 class="font-bold" style="color:var(--cream)" x-text="info.name || 'Nhà Hàng'"></h3>
 					</div>
-					<p class="text-gray-400 text-xs sm:text-sm"
-						x-text="info.description?.substring(0, 100) + '...' || 'Trải nghiệm ẩm thực tuyệt vời'"></p>
+					<p class="text-xs leading-relaxed" style="color:var(--warm2)"
+						x-text="info.description ? info.description.substring(0,100) + '...' : 'Trải nghiệm ẩm thực tuyệt vời'">
+					</p>
 				</div>
-
 				<div>
-					<h4 class="font-semibold mb-3 sm:mb-4 text-sm sm:text-base">Liên kết nhanh</h4>
-					<ul class="space-y-1 sm:space-y-2 text-gray-400 text-xs sm:text-sm">
-						<li><a href="/" class="hover:text-orange-500 transition">Trang chủ</a></li>
-						<li x-show="info.show_menu"><a href="/#menu" class="hover:text-orange-500 transition">Thực
-								đơn</a></li>
-						<li x-show="info.show_gallery"><a href="/#gallery" class="hover:text-orange-500 transition">Hình
+					<h4 class="font-semibold text-sm mb-4" style="color:var(--cream)">Liên kết nhanh</h4>
+					<ul class="space-y-2 text-xs" style="color:var(--warm2)">
+						<li><a href="/" class="hover:text-white transition">Trang chủ</a></li>
+						<li x-show="info.show_menu"><a href="/menu" class="hover:text-white transition">Thực đơn</a>
+						</li>
+						<li x-show="info.show_gallery"><a href="/#gallery" class="hover:text-white transition">Hình
 								ảnh</a></li>
-						<li><a href="/#booking" class="hover:text-orange-500 transition">Đặt bàn</a></li>
-						<li><a href="/blog" class="hover:text-orange-500 transition">Blog</a></li>
-						<li><a href="/#contact" class="hover:text-orange-500 transition">Liên hệ</a></li>
+						<li><a href="/#booking" class="hover:text-white transition">Đặt bàn</a></li>
+						<li><a href="/blog" class="hover:text-white transition">Blog</a></li>
+						<li><a href="/#contact" class="hover:text-white transition">Liên hệ</a></li>
 					</ul>
 				</div>
-
 				<div>
-					<h4 class="font-semibold mb-3 sm:mb-4 text-sm sm:text-base">Kết nối với chúng tôi</h4>
-					<div class="flex gap-2 sm:gap-4">
-						<a :href="info.facebook_url || '#'" target="_blank"
-							class="w-8 h-8 sm:w-10 sm:h-10 bg-gray-800 rounded-lg flex items-center justify-center hover:bg-orange-500 transition">
-							<i class="fab fa-facebook-f text-sm"></i>
-						</a>
-						<a href="#"
-							class="w-8 h-8 sm:w-10 sm:h-10 bg-gray-800 rounded-lg flex items-center justify-center hover:bg-orange-500 transition">
-							<i class="fab fa-instagram text-sm"></i>
-						</a>
-						<a href="#"
-							class="w-8 h-8 sm:w-10 sm:h-10 bg-gray-800 rounded-lg flex items-center justify-center hover:bg-orange-500 transition">
-							<i class="fab fa-tiktok text-sm"></i>
-						</a>
-					</div>
-					<div class="mt-3 sm:mt-4 text-gray-400 text-xs sm:text-sm">
+					<h4 class="font-semibold text-sm mb-4" style="color:var(--cream)">Liên hệ</h4>
+					<div class="space-y-2 text-xs" style="color:var(--warm2)">
+						<p x-text="info.address"></p>
 						<p x-text="info.phone"></p>
 						<p x-text="info.email"></p>
 					</div>
 				</div>
+				<div>
+					<h4 class="font-semibold text-sm mb-4" style="color:var(--cream)">Kết nối</h4>
+					<div class="flex gap-2">
+						<a :href="info.facebook_url || '#'" target="_blank" class="social-btn"><i
+								class="fab fa-facebook-f text-sm"></i></a>
+						<a href="#" class="social-btn"><i class="fab fa-instagram text-sm"></i></a>
+						<a href="#" class="social-btn"><i class="fab fa-tiktok text-sm"></i></a>
+					</div>
+				</div>
 			</div>
-
-			<div
-				class="border-t border-gray-800 pt-6 sm:pt-8 flex flex-col sm:flex-row justify-between items-center gap-3">
-				<p class="text-gray-400 text-xs sm:text-sm text-center sm:text-left">© <span
-						x-text="new Date().getFullYear()"></span> <span x-text="info.name || 'Nhà Hàng'"></span>. All
+			<div class="border-t pt-6 flex flex-col sm:flex-row justify-between items-center gap-3 text-xs"
+				style="border-color:rgba(255,255,255,.08);color:var(--warm2)">
+				<p>© <span x-text="new Date().getFullYear()"></span> <span x-text="info.name || 'Nhà Hàng'"></span>. All
 					rights reserved.</p>
-				<a href="/admin" class="text-gray-500 hover:text-orange-500 text-xs sm:text-sm">
-					<i class="fas fa-lock mr-1"></i>Admin
-				</a>
+				<a href="/admin" class="hover:text-white transition"><i class="fas fa-lock mr-1"></i>Admin</a>
 			</div>
 		</div>
 	</footer>
@@ -331,14 +437,10 @@
 					await this.loadInfo();
 					await this.loadPosts();
 					this.trackPageView();
-
-					// Check for slug in URL
 					const path = window.location.pathname;
 					if (path.startsWith('/blog/')) {
 						const slug = path.replace('/blog/', '');
-						if (slug) {
-							await this.loadPost(slug);
-						}
+						if (slug) await this.loadPost(slug);
 					}
 				},
 
@@ -346,20 +448,28 @@
 					try {
 						const response = await fetch('/api/content/info');
 						this.info = await response.json();
+
+						// Update meta tags
+						if (this.info.meta_description) {
+							document.getElementById('meta-description')?.setAttribute('content', this.info.meta_description);
+							document.getElementById('og-description')?.setAttribute('content', this.info.meta_description);
+						}
+						if (this.info.meta_keywords) {
+							document.getElementById('meta-keywords')?.setAttribute('content', this.info.meta_keywords);
+						}
+						if (this.info.og_image) {
+							document.getElementById('og-image')?.setAttribute('content', this.info.og_image);
+						}
+
 						this.updatePageTitle();
-					} catch (error) {
-						console.error('Failed to load info:', error);
-					}
+					} catch (error) { console.error('Failed to load info:', error); }
 				},
 
 				async loadPosts() {
 					try {
 						const response = await fetch('/api/blog');
 						this.posts = await response.json();
-					} catch (error) {
-						console.error('Failed to load posts:', error);
-						this.posts = [];
-					}
+					} catch (error) { console.error('Failed to load posts:', error); this.posts = []; }
 				},
 
 				async loadPost(slug) {
@@ -368,10 +478,30 @@
 						if (response.ok) {
 							this.selectedPost = await response.json();
 							this.updatePageTitle();
+
+							// Update meta tags for individual post
+							document.getElementById('og-title')?.setAttribute('content', this.selectedPost.title || '');
+							document.getElementById('og-description')?.setAttribute('content', this.selectedPost.excerpt || '');
+							if (this.selectedPost.image_url) {
+								document.getElementById('og-image')?.setAttribute('content', this.selectedPost.image_url);
+							}
+							// Set canonical URL for post
+							document.querySelector('link[rel="canonical"]')?.setAttribute('href', `${window.location.origin}/blog/${slug}`);
+
+							// Update BlogPosting schema
+							const schemaEl = document.getElementById('blogposting-schema');
+							if (schemaEl && this.selectedPost) {
+								const schema = JSON.parse(schemaEl.textContent);
+								schema.headline = this.selectedPost.title || '';
+								schema.description = this.selectedPost.excerpt || '';
+								schema.image = this.selectedPost.image_url || '';
+								schema.datePublished = this.selectedPost.created_at || '';
+								schema.dateModified = this.selectedPost.updated_at || this.selectedPost.created_at || '';
+								if (this.info && this.info.name) schema.author.name = this.info.name;
+								schemaEl.textContent = JSON.stringify(schema, null, 2);
+							}
 						}
-					} catch (error) {
-						console.error('Failed to load post:', error);
-					}
+					} catch (error) { console.error('Failed to load post:', error); }
 				},
 
 				viewPost(slug) {
@@ -384,15 +514,15 @@
 						this.pageTitle = `${this.selectedPost.title} - ${this.info.name || 'Restaurant'}`;
 					} else {
 						this.pageTitle = `Blog - ${this.info.name || 'Restaurant'}`;
+						// Set canonical URL for blog main page
+						document.querySelector('link[rel="canonical"]')?.setAttribute('href', `${window.location.origin}/blog`);
 					}
 					document.title = this.pageTitle;
 				},
 
 				formatDate(dateString) {
 					if (!dateString) return '';
-					const date = new Date(dateString);
-					const options = { year: 'numeric', month: 'long', day: 'numeric' };
-					return date.toLocaleDateString('vi-VN', options);
+					return new Date(dateString).toLocaleDateString('vi-VN', { year: 'numeric', month: 'long', day: 'numeric' });
 				},
 
 				copyLink() {
@@ -404,16 +534,12 @@
 					fetch('/api/stats/track', {
 						method: 'POST',
 						headers: { 'Content-Type': 'application/json' },
-						body: JSON.stringify({
-							page_url: window.location.pathname,
-							referrer: document.referrer
-						})
+						body: JSON.stringify({ page_url: window.location.pathname, referrer: document.referrer })
 					}).catch(() => { });
 				}
 			}
 		}
 
-		// Handle browser back/forward buttons
 		window.addEventListener('popstate', () => {
 			const path = window.location.pathname;
 			if (path === '/blog') {

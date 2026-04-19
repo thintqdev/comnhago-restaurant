@@ -193,6 +193,17 @@ function init() {
     )
   `);
 
+	// Table: space_images (không gian quán)
+	db.exec(`
+    CREATE TABLE IF NOT EXISTS space_images (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      image_url TEXT NOT NULL,
+      caption TEXT,
+      sort_order INTEGER DEFAULT 0,
+      created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+    )
+  `);
+
 	// Table: page_views (statistics)
 	db.exec(`
     CREATE TABLE IF NOT EXISTS page_views (

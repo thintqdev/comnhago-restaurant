@@ -171,4 +171,37 @@ router.delete('/gallery/:id', authenticateToken, (req, res) => {
 	}
 });
 
+// Space images endpoints
+router.get('/space-images', (req, res) => {
+	try {
+		const images = db.prepare('SELECT * FROM space_images ORDER BY sort_order ASC, created_at DESC').all();
+		res.json(images);
+	} catch (error) {
+		res.status(500).json({ error: 'Lỗi khi lấy ảnh không gian' });
+	}
+});
+
+router.post('/space-images', authenticateToken, upload.single('image'), (req, res) => {
+	if (!req.file) {
+		return res.status(400).json({ error: 'Không có file được upload' });
+	}
+	const imageUrl = '/uploads/' + req.file.filename;
+	const { caption, sort_order } = req.body;
+	try {
+		const result = db.prepare('INSERT INTO space_images (image_url, caption, sort_order) VALUES (?, ?, ?)').run(imageUrl, caption || '', sort_order || 0);
+		res.json({ message: 'Thêm ảnh thành công', data: { id: result.lastInsertRowid, image_url: imageUrl, caption } });
+	} catch (error) {
+		res.status(500).json({ error: 'Lỗi khi thêm ảnh không gian' });
+	}
+});
+
+router.delete('/space-images/:id', authenticateToken, (req, res) => {
+	try {
+		db.prepare('DELETE FROM space_images WHERE id = ?').run(req.params.id);
+		res.json({ message: 'Xóa ảnh thành công' });
+	} catch (error) {
+		res.status(500).json({ error: 'Lỗi khi xóa ảnh không gian' });
+	}
+});
+
 module.exports = router;
